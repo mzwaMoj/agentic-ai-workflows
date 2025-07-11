@@ -73,21 +73,20 @@ You'll need an API key from one of these providers:
 
 ### Core Lessons
 
-| Lesson | Topic | Key Technologies | Duration |
-|--------|-------|------------------|----------|
-| **Lesson 1** | [Environment Setup](lesson_1_environment_setup/) | Python, Virtual Environments, API Configuration | 1 hour |
-| **Lesson 2** | [Chatbot Basics](lesson_2_chatbot_basics/) | OpenAI API, Basic Prompting, Function Calling | 2 hours |
-| **Lesson 3** | [RAG & Web Access](lesson_3_rag_web_access/) | Brave Search API, Web Scraping, Information Retrieval | 3 hours |
-| **Lesson 4** | [Text-to-SQL](lesson_4_text_to_sql/) | SQLite, Natural Language to SQL, Database Integration | 3 hours |
-| **Lesson 5** | [Document RAG](lesson_5_document_rag/) | LlamaIndex, Vector Search, Document Processing | 3 hours |
-| **Lesson 6** | [Multi-Agent Systems](lesson_6_multi_agent_systems/) | Agent Orchestration, Inter-agent Communication | 4 hours |
-| **Lesson 7** | [Evaluation Metrics](lesson_7_evaluation_metrics/) | Performance Testing, Quality Metrics, Benchmarking | 2 hours |
-| **Lesson 8** | [API Deployment](lesson_8_api_deployment/) | FastAPI, REST APIs, Service Architecture | 3 hours |
-| **Lesson 9** | [Production Deployment](lesson_9_production/) | Docker, Cloud Deployment, Monitoring | 4 hours |
+| Lesson | Topic | Key Technologies |
+|--------|-------|------------------|
+| **Lesson 1** | [Environment Setup](lesson_1_environment_setup/) | Python, Virtual Environments, API Configuration |
+| **Lesson 2** | [Chatbot Basics](lesson_2_chatbot_basics/) | OpenAI API, Basic Prompting, Function Calling |
+| **Lesson 3** | [RAG & Web Access](lesson_3_rag_web_access/) | Brave Search API, Web Scraping, Information Retrieval |
+| **Lesson 4** | [Text-to-SQL](lesson_4_text_to_sql/) | SQLite, Natural Language to SQL, Database Integration |
+| **Lesson 5** | [Document RAG](lesson_5_document_rag/) | LlamaIndex, Vector Search, Document Processing |
+| **Lesson 6** | [Multi-Agent Systems](lesson_6_multi_agent_systems/) | Agent Orchestration, Inter-agent Communication |
+| **Lesson 7** | [Evaluation Metrics](lesson_7_evaluation_metrics/) | Performance Testing, Quality Metrics, Benchmarking |
+| **Lesson 8** | [API Deployment](lesson_8_api_deployment/) | FastAPI, REST APIs, Service Architecture |
+| **Lesson 9** | [Production Deployment](lesson_9_production/) | Docker, Cloud Deployment, Monitoring |
 
 ### Additional Components
 
-- **Load Balancer**: Azure OpenAI load balancing implementation
 - **Data**: Sample datasets, databases, and test cases
 - **Utils**: Shared utilities for API interactions, evaluation, and visualization
 
@@ -130,10 +129,19 @@ pip install -r requirements.txt
 
 2. **Add your API keys to `.env`**
    ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   BRAVE_SEARCH_API_KEY=your_brave_search_key_here
-   AZURE_OPENAI_ENDPOINT=your_azure_endpoint
-   AZURE_OPENAI_API_KEY=your_azure_key
+    # Azure OpenAI Configuration
+    AZURE_OPENAI_KEY=your_azure_openai_key_here
+    AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+    AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
+    AZURE_OPENAI_VERSION=2024-12-01-preview
+    AZURE_OPENAI_MODEL=gpt-4o-mini
+
+    # Azure OpenAI Embeddings Configuration
+    AZURE_OPENAI_EMBEDDINGS_API_KEY=your_embeddings_api_key_here
+    AZURE_OPENAI_EMBEDDINGS_ENDPOINT=https://your-embeddings-resource.openai.azure.com/
+    AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT_NAME=your_embeddings_deployment
+    AZURE_OPENAI_EMBEDDINGS_API_VERSION=2024-02-01
+    AZURE_OPENAI_EMBEDDINGS_MODEL=text-embedding-3-large
    ```
 
 3. **Verify setup**
@@ -172,13 +180,6 @@ cd multi_agent_chatbot
 streamlit run app.py
 ```
 
-### Testing Load Balancer
-
-```bash
-cd load-balancer
-python test_api.py
-```
-
 ## ✨ Features
 
 ### 🤖 AI Agent Capabilities
@@ -194,7 +195,6 @@ python test_api.py
 - Document processing (PDF, TXT, DOCX)
 - API deployment with FastAPI
 - Docker containerization
-- Load balancing and scaling
 
 ### 📊 Evaluation & Monitoring
 - Performance metrics and benchmarking
@@ -215,7 +215,6 @@ ai-agents-lessons/
 ├── 📁 lesson_7_evaluation_metrics/   # Testing and evaluation
 ├── 📁 lesson_8_api_deployment/       # API development
 ├── 📁 lesson_9_production/           # Production deployment
-├── 📁 load-balancer/                 # Azure OpenAI load balancer
 ├── 📁 data/                          # Sample data and databases
 ├── 📁 utils/                         # Shared utilities
 ├── 📄 requirements.txt               # Python dependencies
@@ -246,7 +245,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - LlamaIndex for RAG capabilities
 - Brave Search for web search functionality
 - The open-source AI community
-
----
-
-**Ready to build the future with AI agents? Start with [Lesson 1](lesson_1_environment_setup/Environment-Setup.md)!** 🚀
