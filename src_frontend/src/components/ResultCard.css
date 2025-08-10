@@ -1,0 +1,275 @@
+.result-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.result-card:hover {
+  background: #FAFBFC;
+  border-color: #C7D2FE;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 51, 161, 0.15);
+}
+
+.result-card.selected {
+  background: #E0E7FF;
+  border-color: #818CF8;
+  box-shadow: 0 0 0 3px rgba(0, 51, 161, 0.1);
+}
+
+/* Grid View Styles */
+.result-card.grid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Result Header */
+.result-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.file-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.result-title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-title {
+  color: #111827;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+.file-type {
+  color: #0033A1;
+  font-weight: 600;
+  background: rgba(0, 51, 161, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+}
+
+.separator {
+  color: #D1D5DB;
+}
+
+.last-modified {
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.version {
+  color: #6B7280;
+  background: #F3F4F6;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Relevance Indicator */
+.relevance-indicator {
+  width: 60px;
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.relevance-bar {
+  height: 100%;
+  background: currentColor;
+  transition: width 0.5s ease-out;
+}
+
+.relevance-indicator.high .relevance-bar {
+  background: #10B981;
+}
+
+.relevance-indicator.medium .relevance-bar {
+  background: #F59E0B;
+}
+
+.relevance-indicator.low .relevance-bar {
+  background: #EF4444;
+}
+
+/* Result Content */
+.result-content {
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.result-excerpt {
+  color: #4B5563;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.result-excerpt.highlighted mark {
+  background: rgba(251, 191, 36, 0.2);
+  color: #92400E;
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+/* Result Tags */
+.result-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  color: #6B7280;
+  padding: 0.3rem 0.8rem;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.tag.more {
+  background: rgba(0, 51, 161, 0.1);
+  border-color: rgba(0, 51, 161, 0.2);
+  color: #0033A1;
+  font-weight: 600;
+}
+
+/* Result Actions */
+.result-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #F3F4F6;
+}
+
+.action-button {
+  padding: 0.5rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  color: #6B7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.action-button:hover {
+  background: #F3F4F6;
+  color: #374151;
+  transform: translateY(-2px);
+  border-color: #D1D5DB;
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* Hover Effects */
+.result-card:hover .result-title {
+  color: #0033A1;
+}
+
+.result-card:hover .relevance-bar {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .result-card {
+    padding: 1rem;
+  }
+  
+  .result-header {
+    flex-wrap: wrap;
+  }
+  
+  .relevance-indicator {
+    width: 100%;
+    order: -1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .file-icon {
+    font-size: 1.5rem;
+  }
+  
+  .result-title {
+    font-size: 1rem;
+  }
+}

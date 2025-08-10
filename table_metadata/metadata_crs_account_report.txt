@@ -1,0 +1,173 @@
+
+<begin crs account report metadata>
+
+# Database Schema Information
+
+## Database Details
+- **Database**: SQL Server (master)
+- **Schema**: dbo
+
+## Table 2: CRS_GH_AccountReport
+Detailed financial account reporting data specifically compiled for **Ghana** in accordance with **Common Reporting Standard (CRS)** requirements. This table captures comprehensive information about account holders and their financial accounts, crucial for international tax transparency. Each record represents a single reportable account.
+
+### Table Structure
+**Full Name**: [DATA].[CRS_GH_AccountReport]
+**Primary Key**: (ParentID, DocRefId3) -- *Note: While `AccountNumber` identifies an account, the composite key of `ParentID` and `DocRefId3` uniquely identifies each specific *report* of an account within a given message.*
+**Foreign Key**: `ParentID` (links to `[DATA].[CRS_GH_MessageSpec].[ParentID]`)
+
+### Column Definitions
+
+**ParentID** (varchar(255))
+- Description: A **unique identifier** that links this specific account report record to its parent **CRS message specification** in the `[DATA].[CRS_GH_MessageSpec]` table. This correlation ensures that account data is part of a larger, coherent CRS report transmission.
+- Examples: `110121c2-6227-4433-a802-54c0ed699405`, `f8a49cc7-a56f-4a14-a559-367ceff95ca6`
+- Rules: **Mandatory**. Must correspond to an existing `ParentID` in `[DATA].[CRS_GH_MessageSpec]`. Establishes a crucial one-to-many relationship.
+
+**DocTypeIndic2** (varchar(255))
+- Description: Specifies the **type of document** being reported for the account, aligning with OECD CRS XML schema standards. This indicates if the report is for a new account, a correction, or a deletion of previously submitted data.
+- Valid Values: `OECD1` (New Data), `OECD2` (Corrected Data), `OECD3` (Void Data)
+- Examples: `OECD1`
+- Rules: **Mandatory**. Adheres to predefined OECD document type indicators for CRS reporting.
+
+**DocRefId3** (varchar(255))
+- Description: A **unique reference identifier for this specific account report document** within the broader CRS message. This ensures individual report traceability and is crucial for corrections or deletions.
+- Examples: `GH20231000273800732C0277B`, `GH202310002738007D8CBD069`
+- Rules: **Mandatory**. Must be unique for each individual account report within a given CRS message.
+
+**AccountNumber** (varchar(255))
+- Description: The **unique identifier for the financial account** being reported. This can be an IBAN, BBAN, or a proprietary internal account number used by the financial institution.
+- Examples: `XXX-XX-83549`, `XXX-XX-67604`
+- Rules: **Mandatory**. Crucial for identifying the financial account. The format may vary based on `AccNumberType`.
+
+**AccNumberType** (varchar(255))
+- Description: Describes the **format or type of the account number** provided in the `AccountNumber` field. This helps in correctly interpreting the account identifier.
+- Valid Values: `IBAN` (International Bank Account Number), `BBAN` (Basic Bank Account Number), `OBAN` (Other Bank Account Number), `Other`, `OECD605` (a general "Other" type, often used for internal numbers)
+- Examples: `OECD605`
+- Rules: **Mandatory**. Provides essential context for the structure of the `AccountNumber`.
+
+**ClosedAccount** (bit)
+- Description: A **boolean indicator** (0 for False, 1 for True) specifying if the account was **closed** during the reporting period. This is important for tracking account lifecycle and may impact the `AccountBalance` (should be 0 if closed).
+- Valid Values: `0` (False), `1` (True)
+- Examples: `0`, `1`
+- Rules: **Mandatory**. Denotes the closure status of the account for regulatory purposes. If `ClosedAccount` is `1` (True), `AccountBalance` should be `0`.
+
+**DormantAccount** (bit)
+- Description: A **boolean indicator** (0 for False, 1 for True) specifying if the account is considered **dormant** as per financial institution policies or regulatory definitions during the reporting period.
+- Valid Values: `0` (False), `1` (True)
+- Examples: `0`, `1`
+- Rules: **Mandatory**. Indicates a state of inactivity for the account.
+
+**UndocumentedAccount** (bit)
+- Description: A **boolean indicator** (0 for False, 1 for True) if the account **lacks full documentation** or due diligence information required by CRS regulations. This signifies incomplete KYC/CDD.
+- Valid Values: `0` (False), `1` (True)
+- Examples: `0`, `1`
+- Rules: **Mandatory**. Highlights accounts where complete customer information is pending or insufficient for CRS compliance.
+
+**ResCountryCode4** (nvarchar(2))
+- Description: The **ISO 3166-1 alpha-2 two-letter country code of residence for the account holder for tax purposes**. This is a critical field for determining reportable jurisdictions under CRS.
+- Examples: `CY`, `LK`, `HN`, `PA`, `MV`, `PK`, `CH`, `VN`, `TR`, `VU`
+- Rules: **Mandatory**. Must be a valid ISO 2-letter country code and exist in `[Ref].[CRS_CountryCode]`.
+
+**AcctHolderType** (varchar(255))
+- Description: Specifies whether the **account holder is an individual or an entity**. This categorization is fundamental for applying correct CRS reporting rules and determines which name and identification fields are applicable.
+- Valid Values: `CRS101` (Individual), `CRS102` (Entity)
+- Examples: `CRS102`
+- Rules: **Mandatory**. Categorizes the legal nature of the account holder.
+
+**nameType** (varchar(255))
+- Description: Specifies the **type of name provided** for the account holder, indicating if it's an individual's name (personal name) or an organization's name (legal entity name).
+- Valid Values: `OECD201` (Individual Name), `OECD202` (Organization Name)
+- Examples: `OECD202`
+- Rules: **Mandatory**. Further refines the interpretation of the name fields (`FirstName`, `LastName`, `MiddleName`).
+
+**FirstName** (varchar(255))
+- Description: The **first name of the individual account holder**. This is a mandatory field for natural persons (`AcctHolderType` = `CRS101`).
+- Examples: `Amanda`, `Adam`, `Christina`
+- Rules: **Conditional Mandatory**. Required when `AcctHolderType` is `CRS101` and `nameType` is `OECD201`. Can be `NULL` if `AcctHolderType` is `CRS102`.
+
+**LastName** (varchar(255))
+- Description: The **last name or surname of the individual account holder**. Also mandatory for natural persons (`AcctHolderType` = `CRS101`).
+- Examples: `Ibarra`, `Jackson`, `Hanna`
+- Rules: **Conditional Mandatory**. Required when `AcctHolderType` is `CRS101` and `nameType` is `OECD201`. Can be `NULL` if `AcctHolderType` is `CRS102`.
+
+**MiddleName** (varchar(255))
+- Description: The **middle name(s) of the individual account holder**. This field is optional and provides additional identification detail for natural persons.
+- Examples: `Michelle`, `Jonathan`, `Christine`
+- Rules: **Optional**. Applicable for individual account holders. Can be `NULL`.
+
+**CountryCode5** (nvarchar(2))
+- Description: The **ISO 3166-1 alpha-2 two-letter country code of the account holder's physical address**. This aids in location identification for due diligence and reporting.
+- Examples: `DK`, `DJ`, `SZ`, `CZ`, `BE`, `CG`, `LI`, `BN`, `SV`, `BT`
+- Rules: **Mandatory**. Must be a valid ISO 2-letter country code and exist in `[Ref].[CRS_CountryCode]`.
+
+**Street** (varchar(255))
+- Description: The **street address** component of the account holder's physical address.
+- Examples: `Herring Viaduct`, `Benjamin Track`, `Michael Trail`
+- Rules: **Mandatory**. Part of the complete postal address.
+
+**PostCode** (varchar(255))
+- Description: The **postal code or zip code** corresponding to the account holder's physical address.
+- Examples: `63948`, `47654`, `55651`
+- Rules: **Mandatory**. Part of the complete postal address.
+
+**City** (varchar(255))
+- Description: The **city component** of the account holder's physical address.
+- Examples: `Roberthaven`, `Lake Jennifer`, `Port Thomasfurt`
+- Rules: **Mandatory**. Part of the complete postal address.
+
+**BirthDate** (varchar(10))
+- Description: The **date of birth of the individual account holder**. This is essential for identifying natural persons and their age for CRS purposes.
+- Examples: `1992/01/19`, `1999/10/01`, `2006/07/16`
+- Rules: **Conditional Mandatory**. Expected format is `YYYY/MM/DD` or `YYYY-MM-DD`. Required when `AcctHolderType` is `CRS101`. Can be `NULL` if `AcctHolderType` is `CRS102`.
+
+**TIN6** (varchar(255))
+- Description: The **Tax Identification Number (TIN)** of the account holder. This is a crucial piece of information for tax authorities to identify individuals or entities for tax purposes.
+- Examples: `XXX-XX-5272`, `XXX-XX-2276`
+- Rules: **Mandatory** for reportable persons; the format will vary based on the issuing jurisdiction.
+
+**issuedBy7** (nvarchar(2))
+- Description: The **ISO 3166-1 alpha-2 two-letter country code of the authority that issued the TIN** provided in `TIN6`. This helps in validating and categorizing the TIN.
+- Examples: `TL`, `ME`, `AT`, `VA`, `ER`, `RO`, `MA`, `LV`, `UG`, `GM`
+- Rules: **Mandatory**. Must be a valid ISO 2-letter country code and exist in `[Ref].[CRS_CountryCode]`.
+
+**AccountBalance** (decimal(18, 2))
+- Description: The **total balance of the account** as of the end of the reporting period. This represents the monetary value held in the account, reported in the currency specified by `currCode`.
+- Examples: `5731.88`, `32157.30`, `99056.00`
+- Rules: **Mandatory**. Represents a numerical monetary value. Must be greater than or equal to zero. If `ClosedAccount` is `1`, `AccountBalance` must be `0`.
+
+**currCode** (nvarchar(3))
+- Description: The **ISO 4217 three-letter currency code** for the `AccountBalance` amount. This specifies the currency of the reported balance.
+- Examples: `EUR`, `USD`, `GHS`
+- Rules: **Mandatory**. Must be a valid ISO 4217 currency code.
+
+**Type** (varchar(255))
+- Description: Specifies the **type of payment or aggregated financial data** being reported for the account. This categorizes the nature of income or proceeds that have accrued to the account.
+- Valid Values: `CRS501` (Gross Interest), `CRS502` (Gross Dividends), `CRS503` (Gross Other Income), `CRS504` (Gross Proceeds from Sale or Redemption of Financial Assets)
+- Examples: `CRS502`
+- Rules: **Mandatory**. Categorizes the nature of the financial payment or aggregated amount.
+
+**PaymentAmnt** (decimal(18, 6))
+- Description: The **amount of the payment or aggregated financial data** corresponding to the `Type` field. This represents the monetary value of specific transactions or income streams during the reporting period.
+- Examples: `0.192482`, `0.131720`, `0.487334`
+- Rules: **Mandatory**. Represents a numerical monetary value. Must be greater than or equal to zero.
+
+**currCode8** (nvarchar(3))
+- Description: The **ISO 4217 three-letter currency code** for the `PaymentAmnt`. This specifies the currency of the reported payment.
+- Examples: `EUR`, `USD`, `GHS`
+- Rules: **Mandatory**. Must be a valid ISO 4217 currency code.
+
+**Processed** (bit)
+- Description: A **boolean flag** (0 for False, 1 for True) indicating whether this specific account report record has been successfully **processed and included in a CRS submission**. This is typically an internal status flag.
+- Valid Values: `0` (False), `1` (True)
+- Examples: `NULL` (implies 0 or unprocessed), `1`
+- Rules: **Optional**. Defaults to `0` (False) if not explicitly set. Used for internal tracking of data processing and submission status.
+
+### Key Relationships & Rules
+
+- **Foreign Key Relationship**: `[DATA].[CRS_GH_AccountReport].[ParentID]` must refer to `[DATA].[CRS_GH_MessageSpec].[ParentID]`.
+- **Country Code Validation**: `ResCountryCode4`, `CountryCode5`, and `issuedBy7` must all contain valid ISO 3166-1 alpha-2 country codes that exist in the `[Ref].[CRS_CountryCode]` table.
+- **Conditional Mandatory Fields for Individuals**: For records where `AcctHolderType` is `CRS101` (Individual) and `nameType` is `OECD201`, `FirstName`, `LastName`, and `BirthDate` are mandatory. Otherwise, they can be `NULL`.
+- **Account Closure and Balance**: If `ClosedAccount` is `1` (True), `AccountBalance` must be `0`.
+- **Currency Consistency**: Both `AccountBalance` and `PaymentAmnt` must be accompanied by their respective valid ISO 4217 currency codes (`currCode` and `currCode8`).
+- **Data Integrity**: All `DocTypeIndic2`, `AccNumberType`, `AcctHolderType`, `nameType`, and `Type` values must adhere to their defined valid sets from OECD CRS standards.
+
+</end crs account report metadata>

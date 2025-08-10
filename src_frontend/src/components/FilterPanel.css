@@ -1,0 +1,346 @@
+.filter-panel {
+  background: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filter-panel.collapsed {
+  height: auto;
+}
+
+/* Filter Header */
+.filter-header {
+  padding: 1.25rem 1.5rem;
+  background: #F5F5F5;
+  border-bottom: 1px solid #E0E0E0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.filter-header:hover {
+  background: #EEEEEE;
+}
+
+.filter-header h3 {
+  color: #333333;
+  font-size: 1.1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-icon {
+  width: 20px;
+  height: 20px;
+  fill: #0033A1;
+}
+
+.filter-count {
+  background: #0033A1;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: #666666;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.toggle-button:hover {
+  color: #333333;
+}
+
+.toggle-button svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: transform 0.3s ease;
+}
+
+.toggle-button svg.rotate {
+  transform: rotate(180deg);
+}
+
+/* Filter Content */
+.filter-content {
+  padding: 1.5rem;
+  animation: slideDown 0.3s ease-out;
+  background: #FFFFFF;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.clear-filters {
+  width: 100%;
+  padding: 0.75rem;
+  background: #FEE2E2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  color: #DC2626;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.clear-filters:hover {
+  background: #FEE2E2;
+  border-color: #F87171;
+  transform: translateY(-1px);
+}
+
+/* Filter Section */
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section h4 {
+  color: #333333;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Document Type Filters */
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.filter-checkbox:hover {
+  background: #F5F5F5;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #D1D5DB;
+  border-radius: 4px;
+  margin-right: 0.75rem;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.filter-checkbox input[type="checkbox"]:checked ~ .checkbox-custom {
+  background: #0033A1;
+  border-color: #0033A1;
+}
+
+.filter-checkbox input[type="checkbox"]:checked ~ .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.type-icon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.type-label {
+  color: #4B5563;
+  font-size: 0.9rem;
+  flex: 1;
+  font-weight: 500;
+}
+
+.type-count {
+  background: #F3F4F6;
+  color: #6B7280;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 10px;
+  margin-left: auto;
+  font-weight: 600;
+}
+
+/* Date Range Filters */
+.date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.date-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  color: #333333;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #0033A1;
+  box-shadow: 0 0 0 3px rgba(0, 51, 161, 0.1);
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.date-separator {
+  color: #6B7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.quick-dates {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.quick-date-btn {
+  padding: 0.5rem 1rem;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  color: #4B5563;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.quick-date-btn:hover {
+  background: #E5E7EB;
+  border-color: #D1D5DB;
+  color: #0033A1;
+}
+
+/* Version Filters */
+.version-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.filter-radio:hover {
+  background: #F5F5F5;
+}
+
+.filter-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.filter-radio input[type="radio"]:checked ~ .radio-custom {
+  border-color: #0033A1;
+}
+
+.filter-radio input[type="radio"]:checked ~ .radio-custom::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  background: #0033A1;
+  border-radius: 50%;
+}
+
+.radio-label {
+  color: #4B5563;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .filter-panel {
+    margin-bottom: 1rem;
+  }
+  
+  .date-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .date-separator {
+    text-align: center;
+  }
+}

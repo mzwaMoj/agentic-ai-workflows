@@ -1,0 +1,23 @@
+Vector Service Test Results
+==================================================
+[15:43:16] Starting Vector Service Embedding Test
+[15:43:16] ==================================================
+[15:43:16] 🧪 TESTING: Embedding Generation
+[15:43:16] ✅ Environment loaded
+[15:43:18] ✅ Imports successful
+[15:43:18] ✅ Configuration loaded - Endpoint: https://sbg-group-prod-azureopenai-za.openai.azure...
+[15:43:18] ✅ Deployment: text-embedding-3-large-SBG-ZA
+[15:43:18] ✅ HTTP client created
+[15:43:18] 🔧 Creating embedding model...
+[15:43:18] ✅ Embedding model created successfully
+[15:43:18] 🚀 Generating embedding for: 'customer information'
+[15:43:18] ⚠️  CRITICAL POINT: This is where hanging typically occurs...
+[15:43:20] 🎉 SUCCESS: Embedding generated in 2.22 seconds
+[15:43:20] ✅ Embedding dimensions: 3072
+[15:43:20] 🎯 CONCLUSION: No hanging detected - embedding generation works!
+[15:43:20] ==================================================
+[15:43:20] 🎉 TEST RESULT: SUCCESS - No hanging detected!
+[15:43:20] 💡 The vector service embedding generation works correctly.
+[15:43:20] 💡 If the API still hangs, the issue is elsewhere (e.g., LlamaIndex query).
+[15:43:20] 📝 Full results saved to: vector_test_results.txt
+[15:43:20] Test completed!

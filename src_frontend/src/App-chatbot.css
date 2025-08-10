@@ -1,0 +1,61 @@
+/* Simple App.css for ChatBot Integration */
+
+/* Standard Bank Brand Colors */
+:root {
+  --sb-blue: #0033A1;
+  --sb-light-blue: #4A90E2;
+  --sb-dark-blue: #002060;
+  --sb-gray: #F5F5F5;
+  --sb-dark-gray: #333333;
+  --sb-gold: #FFA000;
+}
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #FFFFFF;
+  color: var(--sb-dark-gray);
+}
+
+/* App Container */
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content */
+.app-main {
+  flex: 1;
+  padding: 20px;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 100vw;
+  /* Reserve space for future left panel (chat history) */
+  margin-left: 0; /* Will be 250px when left panel is added */
+  /* No footer now, so main content takes all remaining space */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-main {
+    padding: 12px;
+    margin-left: 0; /* No left margin on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main {
+    padding: 8px;
+  }
+}

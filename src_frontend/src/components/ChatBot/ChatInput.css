@@ -1,0 +1,116 @@
+/* ChatInput.css - Simple input styling */
+
+.chat-input-container {
+  border-top: 1px solid #e0e0e0;
+  background-color: white;
+  padding: 16px;
+}
+
+.suggestions-container {
+  margin-bottom: 16px;
+}
+
+.suggestions-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.suggestions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestion-chip {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-chip:hover:not(:disabled) {
+  background-color: #e3f2fd;
+  border-color: #0033a1;
+}
+
+.suggestion-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-form {
+  width: 100%;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.message-input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.4;
+  min-height: 20px;
+  max-height: 120px;
+  padding: 4px;
+  font-family: inherit;
+}
+
+.message-input::placeholder {
+  color: #999;
+}
+
+.send-button {
+  background: #0033a1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+  min-width: 44px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: #002080;
+}
+
+.send-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chat-input-container {
+    padding: 12px;
+  }
+  
+  .suggestions-grid {
+    justify-content: center;
+  }
+  
+  .suggestion-chip {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

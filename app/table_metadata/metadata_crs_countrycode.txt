@@ -1,0 +1,30 @@
+
+<begin crs country code metadata>
+
+# Database Schema Information
+
+## Database Details
+- **Database**: SQL Server (master)
+- **Schema**: dbo
+
+## Table 1: CRS_CountryCode
+Comprehensive country code reference for **Common Reporting Standard (CRS)** reporting. This table provides essential mappings between various country code formats, ensuring accurate and consistent country identification across CRS data. It is based on the **ISO 3166-1 alpha-2 standard**.
+
+### Table Structure
+**Full Name**: [Ref].[CRS_CountryCode]
+**Primary Key**: CountryShortCode
+
+### Column Definitions
+
+**CountryShortCode** (nvarchar(2))
+- Description: The **ISO 3166-1 alpha-2 two-letter country code**. This serves as the primary and unique identifier for each country within the CRS system.
+- Examples: `US`, `GB`, `GH`, `AF`, `AX`, `AL`, `DZ`, `AS`, `AD`, `AO`, `AI`, `AQ`, `AG`
+- Rules: Must be a unique, valid ISO 2-letter country code as defined by ISO 3166-1 alpha-2.
+
+**Country** (nvarchar(50))
+- Description: The **primary, commonly recognized full name** of the country. This is typically the English-language name.
+- Examples: `United States`, `Ghana`, `United Kingdom`, `AFGHANISTAN`, `ALAND ISLANDS`, `ALBANIA`, `ALGERIA`, `AMERICAN SAMOA`, `ANDORRA`, `ANGOLA`, `ANGUILLA`, `ANTARCTICA`, `ANTIGUA AND BARBUDA`
+- Rules: Contains the standard, commonly accepted name for the country.
+
+
+</end crs country code metadata>

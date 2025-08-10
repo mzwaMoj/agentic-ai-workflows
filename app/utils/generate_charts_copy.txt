@@ -1,0 +1,327 @@
+# Import plotly libraries
+import ast
+import traceback
+import pandas as pd
+import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.io as pio
+import time
+import ast
+import re
+from IPython.display import HTML
+
+def enforce_chart_dimensions(code):
+    """
+    Enforce mandatory chart dimensions by replacing non-compliant height/width values.
+    
+    This function is a safety net to ensure ALL generated charts meet our UI requirements,
+    regardless of what the model generates.
+    
+    Args:
+        code (str): The chart generation code
+        
+    Returns:
+        str: Code with enforced dimensions and required settings
+    """
+    # Required dimensions
+    REQUIRED_HEIGHT = 500
+    REQUIRED_WIDTH = 900
+    REQUIRED_MARGINS = "margin=dict(l=30, r=20, t=40, b=30)"
+    
+    print(f"🔧 ENFORCING CHART DIMENSIONS: {REQUIRED_WIDTH}x{REQUIRED_HEIGHT}px")
+    
+    # Track what we're fixing
+    fixes_applied = []
+    
+    # 1. Fix height values that exceed our limit
+    height_pattern = r'height\s*=\s*(\d+)'
+    height_matches = re.findall(height_pattern, code)
+    
+    for height_val in height_matches:
+        if int(height_val) != REQUIRED_HEIGHT:
+            old_height = f"height={height_val}"
+            new_height = f"height={REQUIRED_HEIGHT}"
+            code = code.replace(old_height, new_height)
+            fixes_applied.append(f"📏 Height: {height_val}px → {REQUIRED_HEIGHT}px")
+    
+    # 2. Fix width values that exceed our limit
+    width_pattern = r'width\s*=\s*(\d+)'
+    width_matches = re.findall(width_pattern, code)
+    
+    for width_val in width_matches:
+        if int(width_val) != REQUIRED_WIDTH:
+            old_width = f"width={width_val}"
+            new_width = f"width={REQUIRED_WIDTH}"
+            code = code.replace(old_width, new_width)
+            fixes_applied.append(f"📐 Width: {width_val}px → {REQUIRED_WIDTH}px")
+    
+    # 3. Ensure autosize=True is present
+    if "autosize=True" not in code and "fig.update_layout(" in code:
+        # Find the first fig.update_layout call and add autosize=True
+        layout_pattern = r'(fig\.update_layout\s*\(\s*)'
+        if re.search(layout_pattern, code):
+            code = re.sub(layout_pattern, r'\1autosize=True,\n        ', code)
+            fixes_applied.append("🔄 Added: autosize=True")
+    
+    # 4. Ensure proper margins are set
+    if "margin=dict(" not in code and "fig.update_layout(" in code:
+        # Add margins if not present
+        layout_pattern = r'(fig\.update_layout\s*\(\s*(?:.*?,\s*)?)'
+        if re.search(layout_pattern, code):
+            code = re.sub(layout_pattern, rf'\1{REQUIRED_MARGINS},\n        ', code, count=1)
+            fixes_applied.append("📦 Added: compact margins")
+    else:
+        # Replace existing margins with our required ones
+        margin_pattern = r'margin\s*=\s*dict\([^)]+\)'
+        if re.search(margin_pattern, code):
+            code = re.sub(margin_pattern, REQUIRED_MARGINS, code)
+            fixes_applied.append("📦 Fixed: margin values")
+      # 5. Remove any fig.show() calls (more comprehensive)
+    if "fig.show()" in code:
+        code = code.replace("fig.show()", "# fig.show() removed - not needed")
+        fixes_applied.append("🚫 Removed: fig.show() calls")
+    
+    if ".show()" in code:
+        code = re.sub(r'\.show\(\)', "# .show() removed - not needed", code)
+        fixes_applied.append("🚫 Removed: .show() calls")
+    
+    # 6. Ensure template is set (optional but recommended)
+    if "template=" not in code and "fig.update_layout(" in code:
+        # Add template if not present
+        layout_pattern = r'(fig\.update_layout\s*\(\s*(?:.*?,\s*)?)'
+        if re.search(layout_pattern, code):
+            code = re.sub(layout_pattern, r"\1template='plotly_white',\n        ", code, count=1)
+            fixes_applied.append("🎨 Added: plotly_white template")
+    
+    # 7. Handle make_subplots total dimensions
+    if "make_subplots(" in code:
+        # For subplots, the total figure dimensions should still be enforced
+        # The individual subplot content will be automatically scaled
+        fixes_applied.append("📊 Subplot dimensions enforced at figure level")
+    
+    # Report what we fixed
+    if fixes_applied:
+        print("✅ DIMENSION ENFORCEMENT APPLIED:")
+        for fix in fixes_applied:
+            print(f"   {fix}")
+    else:
+        print("✅ Chart dimensions already compliant!")
+    
+    # Add enforcement comment at the top
+    enforcement_comment = f"""# DIMENSION ENFORCEMENT: Chart automatically sized to {REQUIRED_WIDTH}x{REQUIRED_HEIGHT}px for optimal UI fit
+# This ensures perfect integration with full-width system message layout
+"""
+    code = enforcement_comment + code
+    
+    return code
+
+def validate_chart_dimensions(code):
+    """
+    Validate that chart code meets our dimension requirements.
+    
+    Args:
+        code (str): The chart generation code
+        
+    Returns:
+        tuple: (is_valid, issues_found)
+    """
+    issues = []
+    
+    # Check for dimension violations
+    height_pattern = r'height\s*=\s*(\d+)'
+    width_pattern = r'width\s*=\s*(\d+)'
+    
+    height_matches = re.findall(height_pattern, code)
+    width_matches = re.findall(width_pattern, code)
+    
+    for height in height_matches:
+        if int(height) > 350:
+            issues.append(f"❌ Height {height}px exceeds 350px limit")
+    
+    for width in width_matches:
+        if int(width) > 580:
+            issues.append(f"❌ Width {width}px exceeds 580px limit")
+    
+    # Check for required settings
+    if "autosize=True" not in code:
+        issues.append("❌ Missing autosize=True")
+    
+    if "margin=dict(" not in code:
+        issues.append("❌ Missing margin settings")
+    if "fig.show()" in code:
+        issues.append("❌ Contains fig.show() calls")
+    
+    if ".show()" in code and "# .show()" not in code:
+        issues.append("❌ Contains .show() calls")
+    
+    return len(issues) == 0, issues
+
+def execute_plot_code(code, df=None, height=600, width=1100, use_preloaded_data=True):
+    """
+    Execute the generated Python code and display the interactive Plotly visualization.
+    
+    Args:
+        code (str): Python code to execute (should use Plotly for visualization)
+        df (pandas.DataFrame, optional): Custom DataFrame to use in the visualization
+        height (int): Height of the plot in pixels (default: 350 for better mobile/responsive design)
+        width (int): Width of the plot in pixels (default: 580 to better utilize full-width system message space)
+        use_preloaded_data (bool): Whether to make preloaded data available in the execution context
+          Returns:
+        IPython.display.HTML: Interactive Plotly visualization
+    """
+    try:
+        # Clean the code (remove markdown code block syntax if present)
+        if "```python" in code:
+            code = code.strip().split("```python", 1)[1]
+        elif "```" in code:
+            code = code.split("```", 1)[1]
+        if "```" in code:  # Handle closing backticks if present
+            code = code.split("```", 1)[0]
+        code = code.strip()
+        
+        # 🔧 ENFORCE CHART DIMENSIONS - This is our safety net!
+        # No matter what the model generates, we ensure compliance
+        print("🛡️ APPLYING DIMENSION ENFORCEMENT...")
+        is_valid, issues = validate_chart_dimensions(code)
+        
+        if not is_valid:
+            print("⚠️ NON-COMPLIANT CHART DETECTED:")
+            for issue in issues:
+                print(f"   {issue}")
+            print("🔧 AUTOMATICALLY FIXING...")
+            
+        code = enforce_chart_dimensions(code)
+        print("Cleaned chart code")
+        
+        # Verify enforcement worked
+        print("✅ FINAL VALIDATION...")
+        is_valid_final, remaining_issues = validate_chart_dimensions(code)
+        if is_valid_final:
+            print("✅ Chart dimensions now compliant!")
+        else:
+            print("⚠️ Some issues remain:")
+            for issue in remaining_issues:
+                print(f"   {issue}")
+        
+        # Replace fig.show() with a placeholder that we'll handle later
+        # This avoids nbformat errors and ensures proper rendering
+        code = code.replace("fig.show()", "# fig will be returned instead")
+        code = code.replace("fig.show", "# fig.show")
+        code = code.replace("plt.show()", "# plt.show() removed")
+        code = code.replace("plt.show", "# plt.show")
+        
+        # Create execution environment with necessary libraries
+        exec_globals = {
+            "pd": pd,
+            "np": np,
+            "px": px,
+            "go": go,
+            "make_subplots": make_subplots,
+            "plt": None,
+            "pio": pio,
+            "HTML": HTML
+        }
+        
+        # Add dataframes to execution environment
+        if df is not None:
+            exec_globals["df"] = df
+        
+        # Make preloaded data available if requested
+        if use_preloaded_data:
+            global_vars = globals()
+            if 'df_customer_info' in global_vars:
+                exec_globals["df_customer_info"] = global_vars['df_customer_info']
+                exec_globals["customer_df"] = global_vars['df_customer_info']
+            
+            if 'df_transactions' in global_vars:
+                exec_globals["df_transactions"] = global_vars['df_transactions']
+                exec_globals["transaction_df"] = global_vars['df_transactions']
+                exec_globals["df"] = global_vars['df_transactions']
+        
+        # Execute the code
+        exec(compile(code, filename="<string>", mode="exec"), exec_globals)
+        
+        # Find the figure object
+        fig = None
+        if 'fig' in exec_globals:
+            fig = exec_globals['fig']
+        else:
+            # Look for any plotly figure
+            for var_name, var_value in exec_globals.items():
+                if var_name not in ["pd", "np", "px", "go", "make_subplots", "plt", "pio", "HTML",
+                                    "df_customer_info", "df_transactions", "customer_df", "transaction_df", "df"]:
+                    if hasattr(var_value, 'update_layout'):
+                        fig = var_value
+                        break
+        
+        if fig is None:
+            return HTML("<div style='color:red; font-weight:bold'>No Plotly figure found. Make sure your code creates a figure named 'fig'.</div>")
+          # Update layout for consistent sizing
+        fig.update_layout(
+            height=height,
+            width=width,
+            autosize=True,
+            margin=dict(l=30, r=20, t=40, b=30)  # Reduced margins for compact layout
+        )
+        
+        # Configure for notebook display with enhanced interactivity options
+        config = {
+            'displayModeBar': True,
+            'responsive': True,
+            'scrollZoom': True,
+            'showTips': True,
+            'editable': True,
+            'toImageButtonOptions': {
+                'format': 'png',
+                'filename': 'plot',
+                'height': height,
+                'width': width,
+                'scale': 2
+            },
+            'modeBarButtonsToAdd': [
+                'drawline',
+                'drawopenpath',
+                'drawclosedpath',
+                'drawcircle',
+                'drawrect',
+                'eraseshape'
+            ]
+        }
+        
+        # Convert to HTML with full interactive capabilities
+        # Using full_html=False to avoid conflicts with notebook environment
+        # include_plotlyjs='cdn' ensures latest Plotly version is used
+        html_str = fig.to_html(
+            include_plotlyjs='cdn', 
+            full_html=False, 
+            config=config,
+            include_mathjax='cdn'  # Support for mathematical expressions
+        )
+        
+        # Include custom CSS to ensure proper rendering in the notebook
+        custom_css = """
+        <style>
+        .plotly-graph-div .modebar {
+            opacity: 0.3;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .plotly-graph-div .modebar:hover {
+            opacity: 1;
+        }
+        .plotly-graph-div {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        </style>
+        """
+        
+        return HTML(f"{custom_css}<div style='width:{width}px; max-width:100%; margin:0 auto; overflow-x:auto;'>{html_str}</div>")
+        
+    except SyntaxError as e:
+        return HTML(f"<div style='color:red; font-weight:bold'>Syntax Error: {str(e)}</div><pre>{traceback.format_exc()}</pre>")
+    except Exception as e:
+        traceback.print_exc()
+        return HTML(f"<div style='color:red; font-weight:bold'>Error executing code: {str(e)}</div><pre>{traceback.format_exc()}</pre>")
