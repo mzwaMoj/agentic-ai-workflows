@@ -6,14 +6,13 @@ import text2sqlService from '../../services/text2sqlService';
 import logger from '../../services/logger';
 import './ChatBot.css';
 
-const ChatBot = () => {
-  const [messages, setMessages] = useState([
+const ChatBot = () => {  const [messages, setMessages] = useState([
     {
       role: 'assistant',
       content: 'Hello...! How can I help you today?',
       timestamp: new Date().toISOString()
     }
-  ]);  const [isLoading, setIsLoading] = useState(false);
+  ]);const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [apiHealth, setApiHealth] = useState('unknown');
   const [showSuggestions, setShowSuggestions] = useState(true); // Hide after first message
@@ -127,12 +126,11 @@ const ChatBot = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-  const handleClearChat = () => {
+  };  const handleClearChat = () => {
     setMessages([
       {
         role: 'assistant',
-        content: 'Hello...! How can I help you today?',
+        content: 'Hello! I\'m your AI Data Analyst Assistant. I can help you analyze your data by converting natural language questions into SQL queries and creating interactive visualizations. Try one of the suggestions below or ask me anything about your data!',
         timestamp: new Date().toISOString()
       }
     ]);
@@ -143,7 +141,7 @@ const ChatBot = () => {
     <div className="chatbot-container">
       <div className="chat-header">
         <div className="header-content">
-          <h2>Text2SQL AI Assistant</h2>
+          <h2>AI Data Analyst</h2>
           <div className="api-status">
             <span className={`status-indicator ${apiHealth}`}>
               {apiHealth === 'healthy' ? '🟢' : apiHealth === 'unhealthy' ? '🔴' : '🟡'} 
@@ -179,12 +177,14 @@ const ChatBot = () => {
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
           suggestions={showSuggestions ? [
-            "Show me customer information",
-            "Create a chart of transaction volumes over time",
+            "show me customer base chart by account type and age group",
+            "Show me a charts for transaction volume and amount over time",
             "Display account balances by customer type",
-            "Show me the top 10 customers by balance"
+            "Show me the top 10 customers by balance",
+            "Which customers have the most products with us?",
+            "What's our total customer deposit base by account type"
           ] : []}
-          placeholder="Ask me about your data... (e.g., 'Show me customer balances')"
+          placeholder="Ask me about your data... (e.g., 'Show me a pie chart of transaction volume by channel')"
         />
       </div>
     </div>

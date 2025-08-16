@@ -26,15 +26,12 @@ const ChatInput = ({ onSendMessage, isLoading, suggestions = [], placeholder = "
   };
 
   return (
-    <div className="chat-input-container">
-      {/* Query Suggestions */}
+    <div className="chat-input-container">      {/* Query Suggestions */}
       {suggestions.length > 0 && (
         <div className="suggestions-container">
-          <div className="suggestions-title">Suggested queries:</div>
-          <div className="suggestions-grid">            {suggestions.slice(0, 6).map((suggestion, index) => (
-              <button
+          <div className="suggestions-grid">            {suggestions.slice(0, 6).map((suggestion, index) => (              <button
                 key={index}
-                className="suggestion-chip"
+                className="suggestion-bubble"
                 onClick={() => handleSuggestionClick(typeof suggestion === 'string' ? suggestion : suggestion.text)}
                 disabled={isLoading}
               >

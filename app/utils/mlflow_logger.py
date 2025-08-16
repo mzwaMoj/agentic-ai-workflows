@@ -1,17 +1,23 @@
 # utils/mlflow_logger.py
 import mlflow
 import json
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 def start_chat_run(user_input):
     try:
         # Set tracking URI here instead of at module level
         try:
-            mlflow.set_tracking_uri("http://127.0.0.1:5000")
+            # Set active model:
+            mlflow.set_active_model(name="AzureOpenAI")
+            mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI"))
+
         except:
             pass  # Continue if tracking URI setup fails
             
         # Check if experiment exists and handle it properly
-        experiment_name = "text2sql_analysis"
+        experiment_name = os.environ.get("MLFLOW_EXPERIMENT_NAME")
         experiment = mlflow.get_experiment_by_name(experiment_name)
         
         if experiment is None:

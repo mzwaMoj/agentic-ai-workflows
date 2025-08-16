@@ -4,7 +4,8 @@
   display: flex;
   flex-direction: column;
   height: calc(100vh - 40px); /* Much taller - only accounting for padding */
-  max-width: 1200px; /* Increased for chart display */
+  width: 1200px; /* Fixed width instead of max-width for consistent PC view */
+  max-width: 95vw; /* Prevent overflow on smaller screens */
   margin: 0 auto;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -154,9 +155,17 @@
 }
 
 /* Responsive design */
+@media (max-width: 1250px) {
+  .chatbot-container {
+    width: 95vw; /* Use viewport width on smaller desktops */
+    max-width: 1200px; /* But maintain max width */
+  }
+}
+
 @media (max-width: 768px) {
   .chatbot-container {
     height: calc(100vh - 24px); /* Nearly full height on mobile */
+    width: 100vw; /* Full width on mobile */
     max-width: 100%;
     margin: 0;
     border-radius: 0;

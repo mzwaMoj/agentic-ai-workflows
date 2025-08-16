@@ -114,19 +114,27 @@ def execute_multiple_sql_code(sql_code, connection=None):
         
         if connection is None:
             return [{"query": "", "result": "Error: No database connection provided", "status": "connection_error"}]
-    
-    # Extract SQL queries from code blocks
+      # Extract SQL queries from code blocks
     queries = re.findall(r'```\s*sql\s*(.*?)```', sql_code, re.DOTALL) or re.findall(r'```(.*?)```', sql_code, re.DOTALL)
     
     if not queries:
-        return [{"query": sql_code, 
-                "result": "No SQL queries found in the provided code. Please format queries in ```sql code blocks.",
-                "status": "format_error"}]
-    
+        # If no code blocks found, try to clean the entire sql_code and treat it as a single query
+        # This handles cases where LLM generates SQL with markdown headers but no code blocks
+        cleaned_code = clean_sql_query(sql_code)
+        if cleaned_code and cleaned_code.strip():
+            queries = [cleaned_code]
+        else:
+            return [{"query": sql_code, 
+                    "result": "No SQL queries found in the provided code. Please format queries in ```sql code blocks.",
+                    "status": "format_error"}]
     results = []
     
     for query_idx, query in enumerate(queries):
         query = query.strip()
+        
+        # Clean the query to remove markdown headers and LLM-generated content
+        query = clean_sql_query(query)
+        
         if not query:
             results.append({
                 "query": "", 
@@ -246,8 +254,168 @@ def execute_sql_with_pyodbc(sql_code, server=None, database=None, auth_type=None
                 # Connection might already be closed, ignore the error
                 pass
 
+def clean_sql_query(query):
+    """
+    Cleans up SQL query by removing LLM-generated markdown headers and other 
+    problematic text that might break SQL execution, while preserving valid SQL comments.
+    
+    Parameters:
+    - query: String containing the raw SQL query with potential markdown/comments
+    
+    Returns:
+    - cleaned_query: String containing the cleaned SQL query
+    """
+    if not query or not isinstance(query, str):
+        return query
+    
+    # Remove markdown headers (## SQL Query, # Query, etc.) but preserve SQL line comments (--)
+    cleaned_query = re.sub(r'^#+\s*.*$', '', query, flags=re.MULTILINE)
+    
+    # Remove markdown code block indicators if they exist outside of our expected format
+    cleaned_query = re.sub(r'^```\s*sql\s*$', '', cleaned_query, flags=re.MULTILINE)
+    cleaned_query = re.sub(r'^```\s*$', '', cleaned_query, flags=re.MULTILINE)
+    
+    # Remove numbered list prefixes (1. Customer base chart, 2. Analysis, etc.)
+    # But only if they don't look like SQL content
+    cleaned_query = re.sub(r'^\s*\d+\.\s+[^S][^E][^L].*$', '', cleaned_query, flags=re.MULTILINE | re.IGNORECASE)
+    
+    # Remove bullet point prefixes (- Query, * Analysis, etc.) but not SQL operators
+    # Only remove lines that start with bullet points followed by descriptive text
+    cleaned_query = re.sub(r'^\s*[-*]\s+(?!.*SELECT|.*FROM|.*WHERE|.*GROUP|.*ORDER).*$', '', cleaned_query, flags=re.MULTILINE | re.IGNORECASE)
+    
+    # Remove common LLM explanatory text patterns that are clearly not SQL
+    explanatory_patterns = [
+        r'^\s*Here\s+is\s+the\s+.*query.*:?\s*$',
+        r'^\s*The\s+following\s+query.*:?\s*$',
+        r'^\s*This\s+query.*:?\s*$',
+        r'^\s*Query\s+explanation.*:?\s*$',
+        r'^\s*SQL\s+Query.*:?\s*$',
+        r'^\s*Analysis.*:?\s*$',
+        r'^\s*Chart.*:?\s*$',
+        r'^\s*Report.*:?\s*$',
+        r'^\s*Explanation.*:?\s*$',
+        r'^\s*Description.*:?\s*$',
+    ]
+    
+    for pattern in explanatory_patterns:
+        cleaned_query = re.sub(pattern, '', cleaned_query, flags=re.MULTILINE | re.IGNORECASE)
+    
+    # Remove lines that are clearly prose/explanation but preserve SQL comments
+    # Look for lines that contain common English words but don't contain SQL keywords
+    prose_patterns = [
+        r'^\s*(?!--).*\b(?:will|shows?|gives?|returns?|provides?|analysis|breakdown|complete)\b.*(?<!;)\s*$',
+        r'^\s*(?!--).*\b(?:This|That|These|Those)\s+.*(?<!;)\s*$',
+    ]
+    
+    for pattern in prose_patterns:
+        # Only remove if the line doesn't contain SQL keywords
+        if not re.search(r'\b(?:SELECT|FROM|WHERE|GROUP|ORDER|JOIN|UNION|INSERT|UPDATE|DELETE)\b', cleaned_query, re.IGNORECASE):
+            cleaned_query = re.sub(pattern, '', cleaned_query, flags=re.MULTILINE | re.IGNORECASE)
+    
+    # Remove empty lines and normalize whitespace
+    cleaned_query = re.sub(r'\n\s*\n', '\n', cleaned_query)  # Remove multiple empty lines
+    cleaned_query = re.sub(r'^\s*\n', '', cleaned_query)     # Remove leading empty lines
+    cleaned_query = re.sub(r'\n\s*$', '', cleaned_query)     # Remove trailing empty lines
+    
+    # Final cleanup - strip leading/trailing whitespace
+    cleaned_query = cleaned_query.strip()
+    
+    return cleaned_query
+
+def test_sql_cleaning():
+    """
+    Test function to demonstrate SQL query cleaning functionality.
+    """
+    print("Testing SQL Query Cleaning Function")
+    print("=" * 50)
+    
+    # Test case 1: Query with markdown headers
+    problematic_query1 = """
+-- 1. Customer base chart by account type and age group (age binning)
+## SQL Query
+SELECT 
+    account_type,
+    CASE 
+        WHEN age BETWEEN 18 AND 25 THEN '18-25'
+        WHEN age BETWEEN 26 AND 35 THEN '26-35'
+        WHEN age BETWEEN 36 AND 45 THEN '36-45'
+        WHEN age BETWEEN 46 AND 55 THEN '46-55'
+        WHEN age BETWEEN 56 AND 65 THEN '56-65'
+        WHEN age > 65 THEN '66-75'
+        ELSE 'Unknown'
+    END AS age_group,
+    COUNT(*) AS customer_count
+FROM [master].[dbo].[customer_information] WITH (NOLOCK)
+GROUP BY 
+    account_type,
+    CASE 
+        WHEN age BETWEEN 18 AND 25 THEN '18-25'
+        WHEN age BETWEEN 26 AND 35 THEN '26-35'
+        WHEN age BETWEEN 36 AND 45 THEN '36-45'
+        WHEN age BETWEEN 46 AND 55 THEN '46-55'
+        WHEN age BETWEEN 56 AND 65 THEN '56-65'
+        WHEN age > 65 THEN '66-75'
+        ELSE 'Unknown'
+    END
+ORDER BY account_type, age_group;
+"""
+    
+    cleaned1 = clean_sql_query(problematic_query1)
+    print("Test Case 1: Query with markdown headers")
+    print("Original query (first 200 chars):", repr(problematic_query1[:200]))
+    print("Cleaned query (first 200 chars):", repr(cleaned1[:200]))
+    print("Validation result:", validate_sql_query(cleaned1))
+    print()
+    
+    # Test case 2: Query with numbered list and explanatory text
+    problematic_query2 = """
+1. Transaction analysis report
+Here is the SQL query to analyze transactions:
+
+## Query
+SELECT transaction_type, COUNT(*) as count 
+FROM [master].[dbo].[transaction_history] WITH (NOLOCK)
+GROUP BY transaction_type;
+
+This query will give us the transaction breakdown.
+"""
+    
+    cleaned2 = clean_sql_query(problematic_query2)
+    print("Test Case 2: Query with numbered list and explanatory text")
+    print("Original query:", repr(problematic_query2))
+    print("Cleaned query:", repr(cleaned2))
+    print("Validation result:", validate_sql_query(cleaned2))
+    print()
+    
+    # Test case 3: Multiple formatting issues
+    problematic_query3 = """
+# Customer Report Analysis
+* This query analyzes customer data
+The following query shows customer information:
+
+```sql
+SELECT TOP 50 * FROM [master].[dbo].[customer_information] WITH (NOLOCK);
+```
+
+Analysis complete.
+"""
+    
+    cleaned3 = clean_sql_query(problematic_query3)
+    print("Test Case 3: Multiple formatting issues")
+    print("Original query:", repr(problematic_query3))
+    print("Cleaned query:", repr(cleaned3))
+    print("Validation result:", validate_sql_query(cleaned3))
+    print()
+
 # example usage
 if __name__ == "__main__":
+    # Test the SQL cleaning function
+    test_sql_cleaning()
+    
+    print("\n" + "="*50)
+    print("Running actual SQL execution test...")
+    print("="*50)
+    
     # Example SQL code with multiple queries
     sql_code = """
     ```sql

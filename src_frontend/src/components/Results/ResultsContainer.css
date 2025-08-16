@@ -2,7 +2,7 @@
 
 .results-container {
   width: 100%;
-  max-width: 600px; /* Limit max width to prevent charts from being too wide */
+  max-width: 100%; /* Use full width of parent instead of fixed max-width */
   margin: 1rem auto; /* Center the container */
   background: white;
   border-radius: 8px;

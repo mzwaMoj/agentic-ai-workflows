@@ -9,6 +9,8 @@ import sys
 import os
 from typing import List, Dict, Any, Optional, Tuple
 from pathlib import Path
+import mlflow
+from mlflow.entities import SpanType
 
 # Add project root to path for imports at module level
 project_root = str(Path(__file__).parent.parent.parent)
@@ -46,6 +48,7 @@ class Text2SQLEngine:
         self.vector_service = services['vector']
         self.logging_service = services['logging']
         
+    @mlflow.trace(name="ai-data-analyst")
     async def process_query(self, user_input: str, chat_history: Optional[List[Dict]] = None) -> Dict[str, Any]:
         """
         Main processing pipeline following chatbot.py logic exactly.
@@ -82,6 +85,7 @@ class Text2SQLEngine:
             self.logging_service.log_router_response(message)
 
             chart_html = None  # Will hold the chart HTML if generated
+            sql_code = None  # Will hold the generated SQL code
 
             # Step 2: Process tool calls (following chatbot.py logic)
             if hasattr(message, 'tool_calls') and message.tool_calls:
@@ -92,21 +96,20 @@ class Text2SQLEngine:
 
                 for i, tool_call in enumerate(message.tool_calls):
                     function_name = tool_call.function.name
-                    function_args = json.loads(tool_call.function.arguments)
+                    function_args = json.loads(tool_call.function.arguments)                    
                     logger.info(f"Tool Call {i+1}: {function_name}")
 
                     if function_name == "agent_sql_analysis":
                         # Handle SQL analysis (following chatbot.py)
-                        sql_results, chart_html = await self._handle_sql_analysis(
-                            user_input, function_args, agent_sql_analysis, 
-                            agent_table_router, execute_sql_with_pyodbc,
-                            agent_generate_charts, execute_plot_code
+                        sql_results, chart_html, sql_code = await self._handle_sql_analysis(
+                                                                                user_input, function_args, agent_sql_analysis, 
+                                                                                agent_table_router, execute_sql_with_pyodbc,
+                                                                                agent_generate_charts, execute_plot_code
                         )
                     else:
                         unknown_functions.append(function_name)
                         logger.warning(f"Unknown function '{function_name}' encountered")
 
-                # Step 3: Generate polished response (following chatbot.py)
                 polish_prompt = self._build_polish_prompt(sql_results, chart_results, user_input)
                 self.logging_service.log_polish_prompt(polish_prompt)
                 
@@ -129,11 +132,11 @@ class Text2SQLEngine:
                             })
                         else:
                             chat_history.append({"role": "assistant", "content": final_message})
-                            
                         return {
                             "success": True,
                             "response": final_message,
                             "sql_results": sql_results,
+                            "sql_code": sql_code,
                             "chart_html": chart_html,
                             "chat_history": chat_history,
                             "routing_info": {
@@ -146,11 +149,11 @@ class Text2SQLEngine:
                         fallback_message = self._create_fallback_message(sql_results, chart_results)
                         chat_history.append({"role": "assistant", "content": fallback_message})
                         self.logging_service.log_final_response(fallback_message)
-                        
                         return {
                             "success": True,
                             "response": fallback_message,
                             "sql_results": sql_results,
+                            "sql_code": sql_code,
                             "chart_html": chart_html,
                             "chat_history": chat_history,
                             "routing_info": {"requires_sql": True}
@@ -191,11 +194,10 @@ class Text2SQLEngine:
         finally:
             # End MLflow tracking (following chatbot.py)
             self.logging_service.end_chat_run()
-            
     async def _handle_sql_analysis(self, user_input: str, function_args: dict, 
                                    agent_sql_analysis, agent_table_router, 
                                    execute_sql_with_pyodbc, agent_generate_charts, 
-                                   execute_plot_code) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+                                   execute_plot_code) -> Tuple[List[Dict[str, Any]], Optional[str], Optional[str]]:
         """
         Handle SQL analysis following chatbot.py logic exactly.
         """
@@ -203,8 +205,7 @@ class Text2SQLEngine:
         try:            # Step 1: Get required tables (following chatbot.py)
             required_tables = self._agent_table_retriever(user_input, agent_table_router)
             self.logging_service.log_table_retriever_response(required_tables)
-            
-            # Step 2: Generate SQL (following chatbot.py)
+              # Step 2: Generate SQL (following chatbot.py)
             sql_code = agent_sql_analysis(user_input, required_tables)
             self.logging_service.log_sql_code(sql_code)
             
@@ -262,19 +263,18 @@ class Text2SQLEngine:
                         chart_html = None  # Empty data
                 else:
                     # If it's already a string, use it directly
-                    chart_html = str(chart_html_obj) if chart_html_obj else None
-                
+                    chart_html = str(chart_html_obj) if chart_html_obj else None                
                 self.logging_service.log_generated_chart_results("[Chart visual generated]")
-            return processed_results, chart_html        
+            return processed_results, chart_html, sql_code
         except Exception as e:
             logger.error(f"Error in SQL analysis: {e}")
-            self.logging_service.log_sql_analysis_error(f"Error in SQL analysis: {e}")
+            self.logging_service.log_sql_analysis_error(f"Error in SQL analysis: {e}")            
             return ([{
                 "type": "sql_error", 
                 "query_info": f"SQL analysis failed: {str(e)}",
                 "data": None,
                 "user_request": function_args.get("user_requests", user_input)
-            }], None)
+            }], None, None)
 
     def _agent_table_retriever(self, user_request: str, agent_table_router):
         """

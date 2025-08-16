@@ -17,8 +17,8 @@ class Settings:
     
     def __init__(self):
         # Application
-        self.app_name: str = os.environ.get("APP_NAME", "Text2SQL API")
-        self.app_version: str = os.environ.get("APP_VERSION", "1.0.0")
+        self.app_name: str = os.environ.get("APP_NAME")
+        self.app_version: str = os.environ.get("APP_VERSION")
         self.debug: bool = os.environ.get("DEBUG", "false").lower() == "true"
         # Azure OpenAI Configuration
         self.azure_openai_endpoint: str = os.environ.get("AZURE_OPENAI_ENDPOINT")
@@ -47,12 +47,12 @@ class Settings:
         
         # MLflow Configuration
         self.mlflow_tracking_uri: str = os.environ.get("MLFLOW_TRACKING_URI", "./mlruns")
-        self.mlflow_experiment_name: str = os.environ.get("MLFLOW_EXPERIMENT_NAME", "text2sql_analysis")
+        self.mlflow_experiment_name: str = os.environ.get("MLFLOW_EXPERIMENT_NAME")
         
         # API Configuration
-        self.api_title: str = os.environ.get("API_TITLE", "Text2SQL API")
-        self.api_description: str = os.environ.get("API_DESCRIPTION", "Convert natural language to SQL queries")
-        self.api_version: str = os.environ.get("API_VERSION", "1.0.0")
+        self.api_title: str = os.environ.get("API_TITLE")
+        self.api_description: str = os.environ.get("API_DESCRIPTION")
+        self.api_version: str = os.environ.get("API_VERSION")
         self.api_prefix: str = os.environ.get("API_PREFIX", "/api/v1")
         
         # Server Configuration

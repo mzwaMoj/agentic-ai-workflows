@@ -86,14 +86,13 @@ async def generate_sql(
             user_input=request.query,
             chat_history=request.chat_history
         )
-        
         execution_time = time.time() - start_time
         
         if result["success"]:
             return Text2SQLResponse(
                 success=True,
                 response=result["response"],
-                sql_query=result.get("sql_results", [{}])[0].get("query_info") if result.get("sql_results") else None,
+                sql_query=result.get("sql_code"),  # Use the actual generated SQL code
                 sql_results=result.get("sql_results"),
                 chart_html=result.get("chart_html"),
                 execution_time=execution_time,

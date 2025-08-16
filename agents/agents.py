@@ -11,6 +11,8 @@ import sys
 import os
 import json
 import warnings
+import mlflow
+from mlflow.entities import SpanType
 
 # Add the src directory to the Python path
 src_dir = str(Path(__file__).parent.parent)
@@ -70,6 +72,7 @@ def get_agent_table_rag_tool(tool_input):
             return tool
     return None
 
+@mlflow.trace(span_type=SpanType.AGENT)
 def routing_agent(user_request, chat_history):
     """Routes the user request to the appropriate function/tool, using chat history for context."""
     prompt = prompt_agent_router()
@@ -89,6 +92,7 @@ def routing_agent(user_request, chat_history):
     )
     return response
 
+@mlflow.trace(span_type=SpanType.AGENT)
 def agent_final_response(user_request, chat_history):
     """Routes the user request to the appropriate function/tool, using chat history for context."""
     prompt = prompt_agent_final_response()
@@ -106,6 +110,7 @@ def agent_final_response(user_request, chat_history):
     )
     return response.choices[0].message.content
 
+@mlflow.trace(span_type=SpanType.TOOL)
 def agent_sql_analysis(user_query, required_tables):
     """
     Processes SQL query-related requests.
@@ -133,7 +138,7 @@ def agent_sql_analysis(user_query, required_tables):
     )
     return completions.choices[0].message.content
 
-
+@mlflow.trace(span_type=SpanType.AGENT)
 def agent_generate_charts(user_query):
     prompt =  prompt_agent_plot()
     
@@ -146,6 +151,7 @@ def agent_generate_charts(user_query):
     code = response.choices[0].message.content
     return code
 
+@mlflow.trace(span_type=SpanType.AGENT)
 def agent_table_router(user_query):
     """
     Get the relevant tables.

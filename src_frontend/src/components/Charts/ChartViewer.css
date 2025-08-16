@@ -2,7 +2,7 @@
 
 .chart-viewer {
   width: 100%;
-  max-width: 520px; /* Slightly larger than chart width to account for padding */
+  max-width: 100%; /* Ensure chart viewer doesn't expand beyond parent */
   margin: 1rem auto; /* Center the chart */
   border-radius: 8px;
   background: #ffffff;

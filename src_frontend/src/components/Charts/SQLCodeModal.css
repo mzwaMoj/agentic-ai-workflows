@@ -1,0 +1,199 @@
+/* SQLCodeModal.css */
+
+.sql-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.sql-modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sql-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.sql-modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.sql-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sql-modal-close:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.sql-modal-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sql-code-container {
+  flex: 1;
+  overflow: auto;
+  padding: 1.5rem;
+  background: #f8f9fa;
+}
+
+.sql-code-display {
+  margin: 0;
+  padding: 1.5rem;
+  background: #2d3748;
+  color: #e2e8f0;
+  border-radius: 8px;
+  font-family: 'Courier New', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  border: 1px solid #cbd5e0;
+}
+
+.sql-code-display code {
+  color: inherit;
+  background: transparent;
+  font-family: inherit;
+}
+
+.sql-modal-actions {
+  padding: 1.5rem;
+  border-top: 1px solid #e9ecef;
+  background: white;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.copy-sql-btn {
+  background: #0033A1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.copy-sql-btn:hover {
+  background: #002080;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 51, 161, 0.3);
+}
+
+.copy-sql-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 51, 161, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sql-modal-content {
+    width: 95vw;
+    max-height: 95vh;
+    margin: 0.5rem;
+  }
+  
+  .sql-modal-header {
+    padding: 1rem;
+  }
+  
+  .sql-modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .sql-code-container {
+    padding: 1rem;
+  }
+  
+  .sql-code-display {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .sql-modal-actions {
+    padding: 1rem;
+  }
+  
+  .copy-sql-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .sql-modal-content {
+    background: #1a1a1a;
+    color: #e2e8f0;
+  }
+  
+  .sql-modal-header {
+    background: #2d3748;
+    border-bottom-color: #4a5568;
+  }
+  
+  .sql-modal-header h3 {
+    color: #e2e8f0;
+  }
+  
+  .sql-modal-close {
+    color: #a0aec0;
+  }
+  
+  .sql-modal-close:hover {
+    background: #4a5568;
+    color: #e2e8f0;
+  }
+  
+  .sql-code-container {
+    background: #2d3748;
+  }
+  
+  .sql-modal-actions {
+    background: #1a1a1a;
+    border-top-color: #4a5568;
+  }
+}

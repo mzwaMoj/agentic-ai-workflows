@@ -6,8 +6,7 @@ import FullScreenChartModal from '../Charts/FullScreenChartModal';
 import './ChatMessage.css';
 
 const ChatMessage = ({ message, isUser }) => {
-  const chartRef = useRef(null);
-  const [chartFailed, setChartFailed] = useState(false);
+  const chartRef = useRef(null);  const [chartFailed, setChartFailed] = useState(false);
   const [showFallbackChart, setShowFallbackChart] = useState(false);
   const [showFullScreenChart, setShowFullScreenChart] = useState(false);
 
@@ -263,9 +262,7 @@ const ChatMessage = ({ message, isUser }) => {
                   alignItems: 'center',
                   width: '100%',
                   minHeight: '300px'
-                }}              ></div>
-
-              {/* Full Screen Chart Button */}
+                }}              ></div>              {/* Chart Actions - Full Screen and SQL Code buttons */}
               {message.chartHtml && (
                 <div className="chart-actions" style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }}>
                   <button 
@@ -284,7 +281,8 @@ const ChatMessage = ({ message, isUser }) => {
                       transition: 'all 0.2s ease',
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '0.5rem'
+                      gap: '0.5rem',
+                      marginRight: '0.75rem'
                     }}
                     onMouseOver={(e) => {
                       e.target.style.background = '#002080';
@@ -295,8 +293,7 @@ const ChatMessage = ({ message, isUser }) => {
                       e.target.style.background = '#0033A1';
                       e.target.style.transform = 'translateY(0)';
                       e.target.style.boxShadow = 'none';
-                    }}
-                  >
+                    }}                  >
                     🔍 View Full Screen
                   </button>
                 </div>
@@ -320,9 +317,7 @@ const ChatMessage = ({ message, isUser }) => {
                 </div>
               )}
             </div>
-          )}
-
-          {/* Message text content */}
+          )}          {/* Message text content */}
           <div className="message-text">
             {!isUser ? (
               <div className="markdown-content">
@@ -331,9 +326,9 @@ const ChatMessage = ({ message, isUser }) => {
                 </ReactMarkdown>
               </div>
             ) : (
-              message.content
-            )}
-          </div>          {/* Message metadata */}
+              message.content            )}
+            
+          </div>{/* Message metadata */}
           <div className="message-meta">
             {!isUser && (
               <button
@@ -346,12 +341,10 @@ const ChatMessage = ({ message, isUser }) => {
             )}
           </div>        </div>
       </div>
-      
-      {/* Full Screen Chart Modal */}
+        {/* Full Screen Chart Modal */}
       <FullScreenChartModal
         isOpen={showFullScreenChart}
-        onClose={() => setShowFullScreenChart(false)}
-        chartHtml={message.chartHtml}
+        onClose={() => setShowFullScreenChart(false)}        chartHtml={message.chartHtml}
         title="Data Visualization"
         message={message}
       />
