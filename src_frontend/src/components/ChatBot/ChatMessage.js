@@ -209,7 +209,7 @@ const ChatMessage = ({ message, isUser }) => {
         const trimmedContent = content.trim();
         
         // Currency detection (includes $, €, £, ¥, etc.)
-        const isCurrency = /^[\$€£¥₹₽]/.test(trimmedContent) || /\$|€|£|¥|₹|₽/.test(trimmedContent);
+        const isCurrency = /^[$€£¥₹₽]/.test(trimmedContent) || /\$|€|£|¥|₹|₽/.test(trimmedContent);
         
         // Number detection (integers, decimals, percentages)
         const isNumber = /^-?\d{1,3}(,\d{3})*(\.\d+)?%?$/.test(trimmedContent) || 

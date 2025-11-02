@@ -8,6 +8,9 @@ if src_dir not in sys.path:
 import json
 import logging
 import re
+
+# Import Settings for database configuration
+from app.config.settings import Settings
 from IPython.display import display
 import json
 import chromadb
@@ -61,25 +64,12 @@ except ImportError as e:
 
 logger = logging.getLogger(__name__)
 
-from openai import AzureOpenAI
+from openai import OpenAI
 import os
 from dotenv import load_dotenv, find_dotenv
 import warnings
 warnings.filterwarnings("ignore")
 load_dotenv(find_dotenv())
-
-
-import ssl
-import urllib3
-import httpx
-
-# Disable SSL certificate verification globally (for development only!)
-ssl._create_default_https_context = ssl._create_unverified_context
-
-# # For requests and urllib3, suppress warnings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-# Create httpx client with SSL verification disabled
-http_client = httpx.Client(verify=False)
 
 import chromadb
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
@@ -87,40 +77,27 @@ from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
 
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
-from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
-from llama_index.llms.azure_openai import AzureOpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms.openai import OpenAI as LlamaIndexOpenAI
 
-API_KEY = os.environ.get("AZURE_OPENAI_KEY") 
-API_ENDPOINT = os.environ.get("AZURE_OPENAI_ENDPOINT")
-AZURE_DEPLOYMENT = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
-API_VERSION = os.environ.get("AZURE_OPENAI_VERSION")
-MODEL = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
+# OpenAI Configuration for agents (using new OpenAI API)
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o")
 
+# OpenAI Embedding Configuration (using standard OpenAI embeddings)
+OPENAI_EMBEDDING_MODEL = os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
 
-# set up an LLM
-llm = AzureOpenAI(
-  default_headers={"Ocp-Apim-Subscription-Key": API_KEY},
-  api_key=API_KEY,
-  azure_endpoint=API_ENDPOINT,
-  azure_deployment= AZURE_DEPLOYMENT,
-  api_version=API_VERSION, 
-  model = AZURE_DEPLOYMENT,
-  http_client=http_client
+# Set up LLM for LlamaIndex (using standard OpenAI)
+llm = LlamaIndexOpenAI(
+    api_key=OPENAI_API_KEY,
+    model=OPENAI_MODEL,
 )
 
-embeddings_endpoint = os.environ.get("AZURE_OPENAI_EMBEDDING_ENDPOINT")
-embeddings_api_subscription_key = os.environ.get("AZURE_OPENAI_EMBEDDING_KEY")
-embeddings_model_name = os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")
-embeddings_deployment = os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")
-embeddings_api_version = os.environ.get("AZURE_OPENAI_EMBEDDING_API_VERSION")
-
-# Set up embedding model
-embedding_model = AzureOpenAIEmbedding(
-    deployment_name=embeddings_deployment,
-    api_key=embeddings_api_subscription_key,
-    azure_endpoint=embeddings_endpoint,
-    api_version=embeddings_api_version,
-    http_client=http_client
+# Set up embedding model (using standard OpenAI embeddings)
+embedding_model = OpenAIEmbedding(
+    model=OPENAI_EMBEDDING_MODEL,
+    api_key=OPENAI_API_KEY,
+    api_base="https://api.openai.com/v1",
 )
 
 Settings.llm = llm
@@ -159,18 +136,20 @@ def agent_table_retriever(user_request):
         user_request (str): The user's natural language query.
         
     Returns:
-        list: A list of table names that are relevant to the user request.
+        str: Metadata for the relevant tables.
     """
     response = agent_table_router(user_request)
     
-    tool_call = response.choices[0].message.tool_calls[0]
-    if tool_call.function.name == "agent_table_rag":
-        args = json.loads(tool_call.function.arguments)
-        table_results = agent_table_rag( str(args.get("relevant_tables")))
-    else:
-        raise ValueError("Unexpected tool call name: {}".format(tool_call.function.name))
+    # Process response.output to find function calls
+    for item in response.output:
+        if hasattr(item, 'type') and item.type == "function_call":
+            if item.name == "agent_table_rag":
+                args = json.loads(item.arguments)
+                table_results = agent_table_rag(str(args.get("relevant_tables")))
+                return table_results.response
     
-    return table_results.response
+    # If no function call found, return error message
+    raise ValueError("No agent_table_rag function call found in response")
 
 
 
@@ -182,20 +161,22 @@ def ai_chatbot(user_input, chat_history):
 
     try:
         response = routing_agent(user_input, chat_history)
-        message = response.choices[0].message
-        log_router_response(message)
+        log_router_response(response)
 
         chart_html = None  # Will hold the chart HTML if generated
 
-        if hasattr(message, 'tool_calls') and message.tool_calls:
-            print(f"\nProcessing {len(message.tool_calls)} tool call(s)")
+        # Check for function calls in response.output (new format)
+        function_calls = [item for item in response.output if hasattr(item, 'type') and item.type == "function_call"]
+        
+        if function_calls:
+            print(f"\nProcessing {len(function_calls)} tool call(s)")
             sql_results = []
             chart_results = []
             unknown_functions = []
 
-            for i, tool_call in enumerate(message.tool_calls):
-                function_name = tool_call.function.name
-                function_args = json.loads(tool_call.function.arguments)
+            for i, tool_call in enumerate(function_calls):
+                function_name = tool_call.name
+                function_args = json.loads(tool_call.arguments)
                 print(f"\nTool Call {i+1}:")
                 print(f"Function Name: {function_name}")
                 print(f"Function Arguments: {function_args}")
@@ -237,7 +218,8 @@ def ai_chatbot(user_input, chat_history):
                 chat_history.append({"role": "assistant", "content": assistant_msg})
                 return chat_history
         else:
-            content = message.content or "I don't have a response for that."
+            # No function calls, just return the text response
+            content = response.output_text or "I don't have a response for that."
             log_final_response(content)
             chat_history.append({"role": "assistant", "content": content})
 
@@ -249,11 +231,23 @@ def ai_chatbot(user_input, chat_history):
 def handle_sql_analysis(user_input, function_args):
     chart_html = None
     try:
+        # Initialize settings for database connection
+        settings = Settings()
+        
         required_tables = agent_table_retriever(user_input)
         log_table_retriever_response(required_tables)
         sql_code = agent_sql_analysis(user_input, required_tables)
         log_sql_code(sql_code)
-        sql_results = execute_sql_with_pyodbc(sql_code, auth_type='windows')
+        
+        # Execute SQL with database settings
+        sql_results = execute_sql_with_pyodbc(
+            sql_code,
+            server=settings.db_server,
+            database=settings.db_database,
+            auth_type=settings.db_auth_type,
+            username=settings.db_username,
+            password=settings.db_password
+        )
         log_sql_results(sql_results)
 
         processed_results = []

@@ -96,13 +96,13 @@ class LoggingService:
         from datetime import datetime
         
         # Create logs directory if it doesn't exist
-        logs_dir = Path("C:/Users/A238737/OneDrive - Standard Bank/Documents/GroupFunctions/rag-systems/ai-analyst-demo/text_sql_analysis/app/logs")
+        logs_dir = Path("./app/logs")
         logs_dir.mkdir(parents=True, exist_ok=True)
         
         # Create session-based log filename (one per day or session)
         # Check if we already have a log file for today
         today = datetime.now().strftime("%Y%m%d")
-        log_file = logs_dir / f"text2sql_api_session_{today}.log"
+        log_file = logs_dir / f"session_{today}.log"
         
         # If no handlers exist or they don't include our file handler, set up logging
         root_logger = logging.getLogger()
@@ -208,6 +208,16 @@ class LoggingService:
         try:
             from app.utils import log_generated_chart_results
             log_generated_chart_results(results)
+        except Exception as e:
+            logger.error(f"Failed to log chart results: {e}")
+
+    def log_products(self, results):
+        """Log chart generation results to MLflow."""
+        if not self.mlflow_enabled:
+            return
+        try:
+            from app.utils import log_products
+            log_products(results)
         except Exception as e:
             logger.error(f"Failed to log chart results: {e}")
     

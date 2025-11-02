@@ -1,0 +1,632 @@
+# Bank Products and Services Catalog
+## Comprehensive Guide to Our Financial Products
+
+Last Updated: November 1, 2025
+Department: Product Management
+Classification: Public
+
+---
+
+## SAVINGS ACCOUNTS
+
+### 1. Essential Savings Account
+**Product Code:** SAV-001
+**Description:** Basic savings account for everyday banking needs
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: None
+- Credit Score: Not required
+- Employment Status: Any (students, employed, self-employed, unemployed)
+
+**Key Features:**
+- Minimum Opening Deposit: $25
+- Minimum Monthly Balance: $100
+- Interest Rate: 0.50% APY
+- Monthly Maintenance Fee: $5 (waived if balance > $500)
+- ATM Withdrawals: 4 free per month, $2.50 thereafter
+- Online Banking: Free
+- Mobile App Access: Free
+
+**Target Audience:** Students, first-time account holders, low-income earners
+
+---
+
+### 2. Premium Savings Account
+**Product Code:** SAV-002
+**Description:** High-yield savings account for serious savers
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: $30,000 annually
+- Credit Score: 650+
+- Employment Status: Employed or Self-employed with verifiable income
+
+**Key Features:**
+- Minimum Opening Deposit: $1,000
+- Minimum Monthly Balance: $2,500
+- Interest Rate: 4.25% APY
+- Monthly Maintenance Fee: $15 (waived if balance > $5,000)
+- ATM Withdrawals: Unlimited free
+- Online Banking: Free
+- Mobile App Access: Free with premium features
+- Dedicated Customer Service Line
+- Quarterly Interest Bonuses for balances over $10,000
+
+**Target Audience:** Middle to high-income professionals, established savers
+
+---
+
+### 3. Youth Savings Account
+**Product Code:** SAV-003
+**Description:** Savings account designed for minors with parental oversight
+
+**Eligibility Criteria:**
+- Minimum Age: 0 years (must have parent/guardian co-signer)
+- Maximum Age: 17 years
+- Income Requirement: None
+- Parent/Guardian must have account with bank
+
+**Key Features:**
+- Minimum Opening Deposit: $10
+- Minimum Monthly Balance: $25
+- Interest Rate: 1.50% APY
+- Monthly Maintenance Fee: $0
+- ATM Withdrawals: 2 free per month (parent can adjust)
+- Online Banking: View-only access
+- Parental Controls: Full oversight and spending limits
+- Automatically converts to Essential Savings at age 18
+
+**Target Audience:** Parents saving for children's future
+
+---
+
+## CHECKING ACCOUNTS
+
+### 4. Basic Checking Account
+**Product Code:** CHK-001
+**Description:** No-frills checking account for everyday transactions
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: None
+- Credit Score: Not required (no overdraft protection)
+- Employment Status: Any
+
+**Key Features:**
+- Minimum Opening Deposit: $0
+- Minimum Monthly Balance: None
+- Interest Rate: 0% APY
+- Monthly Maintenance Fee: $8 (waived with $500 direct deposit)
+- Debit Card: Free
+- Checks: $0.15 per check
+- Overdraft Protection: Not available
+- ATM Withdrawals: 6 free per month, $3 thereafter
+- Online Bill Pay: Free
+
+**Target Audience:** Budget-conscious customers, students, entry-level workers
+
+---
+
+### 5. Premier Checking Account
+**Product Code:** CHK-002
+**Description:** Full-service checking with premium benefits
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: $50,000 annually
+- Credit Score: 680+
+- Employment Status: Employed or Self-employed
+
+**Key Features:**
+- Minimum Opening Deposit: $500
+- Minimum Monthly Balance: $1,500
+- Interest Rate: 0.75% APY
+- Monthly Maintenance Fee: $25 (waived with $3,000 balance or $5,000 monthly deposits)
+- Debit Card: Premium with cashback (1.5% on all purchases)
+- Checks: Free unlimited
+- Overdraft Protection: Available (up to $1,000)
+- ATM Withdrawals: Unlimited free worldwide
+- Online Bill Pay: Free with bill pay guarantee
+- Travel Insurance: Up to $250,000
+- Purchase Protection: Up to $10,000 annually
+
+**Target Audience:** High-income professionals, frequent travelers
+
+---
+
+## CREDIT CARDS
+
+### 6. Starter Credit Card
+**Product Code:** CC-001
+**Description:** Entry-level credit card for building credit history
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: $15,000 annually
+- Credit Score: 580-669 (Fair credit)
+- Employment Status: Employed, Self-employed, or Student with income
+
+**Key Features:**
+- Credit Limit: $500 - $2,000
+- Annual Fee: $0
+- APR: 19.99% - 24.99% variable
+- Cash Advance Fee: 5% or $10, whichever is greater
+- Late Payment Fee: $35
+- Foreign Transaction Fee: 3%
+- Rewards: None
+- Credit Limit Increase: Reviewed after 6 months of on-time payments
+
+**Target Audience:** Credit builders, students, first-time credit card users
+
+---
+
+### 7. Rewards Credit Card
+**Product Code:** CC-002
+**Description:** Cash-back rewards card for everyday spending
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: $35,000 annually
+- Credit Score: 670-739 (Good credit)
+- Employment Status: Employed or Self-employed
+
+**Key Features:**
+- Credit Limit: $3,000 - $15,000
+- Annual Fee: $95 (waived first year)
+- APR: 15.99% - 21.99% variable
+- Cash Advance Fee: 5% or $10, whichever is greater
+- Late Payment Fee: $40
+- Foreign Transaction Fee: 0%
+- Rewards: 
+  - 3% cash back on groceries
+  - 2% cash back on gas
+  - 1% cash back on all other purchases
+- Sign-up Bonus: $200 after spending $1,000 in first 3 months
+- Purchase Protection: 90 days
+- Extended Warranty: Additional 1 year on eligible purchases
+
+**Target Audience:** Regular spenders, families, value-conscious consumers
+
+---
+
+### 8. Premium Travel Credit Card
+**Product Code:** CC-003
+**Description:** Elite travel rewards card with luxury perks
+
+**Eligibility Criteria:**
+- Minimum Age: 25 years
+- Income Requirement: $75,000 annually
+- Credit Score: 740+ (Excellent credit)
+- Employment Status: Employed or Self-employed
+
+**Key Features:**
+- Credit Limit: $10,000 - $50,000
+- Annual Fee: $495
+- APR: 14.99% - 18.99% variable
+- Cash Advance Fee: 5% or $10, whichever is greater
+- Late Payment Fee: $40
+- Foreign Transaction Fee: 0%
+- Rewards:
+  - 5x points on flights and hotels
+  - 3x points on dining and travel
+  - 1x point on all other purchases
+  - Points value: 1 point = $0.02 when redeemed for travel
+- Sign-up Bonus: 100,000 points after spending $5,000 in first 3 months
+- Travel Benefits:
+  - Airport lounge access (Priority Pass)
+  - $300 annual travel credit
+  - Travel insurance up to $1,000,000
+  - No foreign transaction fees
+  - Concierge service
+  - TSA PreCheck/Global Entry credit ($100)
+- Purchase Protection: 120 days
+- Extended Warranty: Additional 2 years
+
+**Target Audience:** Frequent travelers, high-income earners, luxury seekers
+
+---
+
+## PERSONAL LOANS
+
+### 9. Personal Loan - Standard
+**Product Code:** LOAN-001
+**Description:** Unsecured personal loan for various needs
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: $25,000 annually
+- Credit Score: 640+
+- Employment Status: Employed for at least 1 year or Self-employed for 2 years
+- Debt-to-Income Ratio: Must be below 40%
+
+**Key Features:**
+- Loan Amount: $1,000 - $35,000
+- Loan Term: 12 - 60 months
+- APR: 7.99% - 18.99% (based on creditworthiness)
+- Origination Fee: 1% - 5% of loan amount
+- Prepayment Penalty: None
+- Application Fee: $50 (waived for existing customers)
+- Funding Time: 2-5 business days
+- Use Cases: Debt consolidation, home improvements, major purchases
+
+**Monthly Payment Example:**
+- $10,000 loan at 12% APR for 36 months = $332/month
+
+**Target Audience:** Customers needing funds for consolidation or large purchases
+
+---
+
+### 10. Personal Loan - Prime
+**Product Code:** LOAN-002
+**Description:** Premium personal loan with best rates for qualified borrowers
+
+**Eligibility Criteria:**
+- Minimum Age: 25 years
+- Income Requirement: $60,000 annually
+- Credit Score: 720+
+- Employment Status: Employed for at least 2 years with current employer
+- Debt-to-Income Ratio: Must be below 30%
+- Existing customer with bank for at least 1 year
+
+**Key Features:**
+- Loan Amount: $5,000 - $100,000
+- Loan Term: 12 - 84 months
+- APR: 4.99% - 10.99% (based on creditworthiness)
+- Origination Fee: 0% - 2% of loan amount
+- Prepayment Penalty: None
+- Application Fee: $0
+- Funding Time: 1-2 business days
+- Relationship Discount: 0.25% APR reduction for autopay
+- Use Cases: Debt consolidation, home renovations, major life events
+
+**Monthly Payment Example:**
+- $25,000 loan at 6.5% APR for 60 months = $489/month
+
+**Target Audience:** High-credit borrowers, existing customers with good history
+
+---
+
+## HOME LOANS
+
+### 11. First-Time Homebuyer Mortgage
+**Product Code:** MTG-001
+**Description:** Special mortgage program for first-time homebuyers
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: $40,000 annually (individual) or $60,000 (household)
+- Credit Score: 620+
+- Employment Status: Employed for at least 2 years or Self-employed for 3 years
+- Debt-to-Income Ratio: Must be below 43%
+- Must complete homebuyer education course
+- Cannot have owned home in past 3 years
+
+**Key Features:**
+- Loan Amount: Up to $400,000
+- Down Payment: As low as 3%
+- Loan Term: 15 or 30 years
+- Interest Rate: 6.25% - 7.50% (30-year fixed)
+- PMI Required: Yes, if down payment < 20%
+- Closing Cost Assistance: Up to $5,000 grant available
+- Property Type: Primary residence only
+- Origination Fee: 1%
+
+**Target Audience:** First-time homebuyers, young families
+
+---
+
+### 12. Conventional Home Mortgage
+**Product Code:** MTG-002
+**Description:** Standard home mortgage for qualified buyers
+
+**Eligibility Criteria:**
+- Minimum Age: 21 years
+- Income Requirement: Varies by loan amount (typically 3x annual income)
+- Credit Score: 680+
+- Employment Status: Employed for at least 2 years
+- Debt-to-Income Ratio: Must be below 43%
+- Down Payment: Minimum 10%
+
+**Key Features:**
+- Loan Amount: Up to $1,000,000
+- Down Payment: 10% - 20%+
+- Loan Term: 10, 15, 20, or 30 years
+- Interest Rate: 5.99% - 7.25% (varies by term and credit)
+- PMI Required: Yes, if down payment < 20%
+- Property Type: Primary residence, second home, or investment property
+- Origination Fee: 0.5% - 1%
+
+**Target Audience:** Homebuyers with established credit and savings
+
+---
+
+## AUTO LOANS
+
+### 13. New Car Loan
+**Product Code:** AUTO-001
+**Description:** Financing for new vehicle purchases
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: $24,000 annually
+- Credit Score: 640+
+- Employment Status: Employed for at least 6 months
+- Debt-to-Income Ratio: Must be below 45%
+
+**Key Features:**
+- Loan Amount: $5,000 - $75,000
+- Loan Term: 24 - 72 months
+- APR: 3.99% - 8.99% (based on term and credit score)
+- Down Payment: Recommended 10-20%, not required
+- Vehicle Age: Current model year or up to 1 year old
+- Mileage Limit: Under 10,000 miles
+- Application Fee: $0
+- Prepayment Penalty: None
+
+**Monthly Payment Example:**
+- $30,000 loan at 5.5% APR for 60 months = $571/month
+
+**Target Audience:** New car buyers with good credit
+
+---
+
+### 14. Used Car Loan
+**Product Code:** AUTO-002
+**Description:** Financing for pre-owned vehicle purchases
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: $20,000 annually
+- Credit Score: 600+
+- Employment Status: Employed for at least 6 months
+- Debt-to-Income Ratio: Must be below 50%
+
+**Key Features:**
+- Loan Amount: $3,000 - $50,000
+- Loan Term: 24 - 60 months
+- APR: 5.99% - 12.99% (based on vehicle age, term, and credit score)
+- Down Payment: Recommended 15-20%
+- Vehicle Age: Up to 8 years old
+- Mileage Limit: Under 100,000 miles
+- Application Fee: $0
+- Prepayment Penalty: None
+
+**Monthly Payment Example:**
+- $15,000 loan at 8% APR for 48 months = $366/month
+
+**Target Audience:** Used car buyers, budget-conscious consumers
+
+---
+
+## BUSINESS ACCOUNTS
+
+### 15. Small Business Checking
+**Product Code:** BIZ-001
+**Description:** Business checking account for small businesses and sole proprietors
+
+**Eligibility Criteria:**
+- Business Age: Any (new businesses welcome)
+- Annual Revenue: Up to $2 million
+- Business Type: Sole proprietor, LLC, Partnership, S-Corp, C-Corp
+- Required Documents: EIN or SSN, Business license, Articles of incorporation
+
+**Key Features:**
+- Minimum Opening Deposit: $100
+- Minimum Monthly Balance: $500
+- Monthly Maintenance Fee: $15 (waived with $2,500 average balance)
+- Transaction Limit: 200 free transactions/month, $0.50 thereafter
+- Cash Deposits: $5,000 free per month, 0.3% fee thereafter
+- Online Banking: Free with bill pay
+- Merchant Services: Available (separate fees apply)
+- Business Debit Card: Free
+
+**Target Audience:** Small businesses, startups, sole proprietors
+
+---
+
+### 16. Business Line of Credit
+**Product Code:** BIZ-002
+**Description:** Revolving credit line for business working capital needs
+
+**Eligibility Criteria:**
+- Business Age: Minimum 2 years in operation
+- Annual Revenue: $100,000+
+- Credit Score (Owner): 680+
+- Business Credit Score: 140+ (Paydex)
+- Required Documents: 2 years tax returns, 6 months bank statements, financial statements
+
+**Key Features:**
+- Credit Limit: $10,000 - $250,000
+- Draw Period: 24 months
+- Repayment Period: 12 months after draw period
+- APR: 8.99% - 14.99% variable (Prime + margin)
+- Annual Fee: $100
+- Draw Fee: None
+- Early Payoff Penalty: None
+- Use of Funds: Working capital, inventory, seasonal expenses
+
+**Target Audience:** Established small businesses needing flexible financing
+
+---
+
+## INVESTMENT PRODUCTS
+
+### 17. Certificate of Deposit (CD) - Standard
+**Product Code:** CD-001
+**Description:** Fixed-term, fixed-rate deposit account
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: None
+- Credit Score: Not required
+
+**Key Features:**
+- Minimum Deposit: $1,000
+- Term Options: 3, 6, 12, 24, 36, 60 months
+- Interest Rates (APY):
+  - 3 months: 2.00%
+  - 6 months: 2.50%
+  - 12 months: 3.50%
+  - 24 months: 4.00%
+  - 36 months: 4.25%
+  - 60 months: 4.50%
+- Early Withdrawal Penalty: 90 days interest for terms < 12 months, 180 days for longer terms
+- Automatic Renewal: Yes, unless notified within 10 days of maturity
+- FDIC Insured: Up to $250,000
+
+**Target Audience:** Conservative investors, savers with specific time horizon
+
+---
+
+### 18. Money Market Account
+**Product Code:** MMA-001
+**Description:** High-yield savings account with check-writing privileges
+
+**Eligibility Criteria:**
+- Minimum Age: 18 years
+- Income Requirement: None
+- Credit Score: Not required
+
+**Key Features:**
+- Minimum Opening Deposit: $2,500
+- Minimum Balance: $2,500 (to earn interest)
+- Interest Rate: Tiered APY
+  - $2,500 - $9,999: 3.00%
+  - $10,000 - $24,999: 3.50%
+  - $25,000 - $99,999: 4.00%
+  - $100,000+: 4.50%
+- Monthly Maintenance Fee: $12 (waived with $10,000 balance)
+- Check Writing: Limited to 6 per month
+- Debit Card: Available
+- Transfers: 6 free per month
+- FDIC Insured: Up to $250,000
+
+**Target Audience:** Savers wanting higher yields with some liquidity
+
+---
+
+## SPECIALTY ACCOUNTS
+
+### 19. Health Savings Account (HSA)
+**Product Code:** HSA-001
+**Description:** Tax-advantaged savings account for medical expenses
+
+**Eligibility Criteria:**
+- Must be enrolled in High-Deductible Health Plan (HDHP)
+- Cannot be claimed as dependent on someone else's tax return
+- Not enrolled in Medicare
+- No other health coverage (with exceptions)
+
+**Key Features:**
+- Minimum Opening Deposit: $0
+- Annual Contribution Limits (2025):
+  - Individual: $4,300
+  - Family: $8,550
+  - Age 55+ catch-up: Additional $1,000
+- Interest Rate: 2.50% APY
+- Monthly Maintenance Fee: $0
+- Investment Options: Available for balances over $2,000
+- Tax Benefits: Triple tax advantage (deductible contributions, tax-free growth, tax-free withdrawals for qualified expenses)
+- Rollover: Funds never expire
+- Debit Card: Free HSA debit card
+
+**Target Audience:** Individuals/families with HDHPs seeking tax-advantaged medical savings
+
+---
+
+### 20. 529 College Savings Plan
+**Product Code:** EDU-001
+**Description:** Tax-advantaged investment account for education expenses
+
+**Eligibility Criteria:**
+- Account Owner: Any age, any state resident
+- Beneficiary: Any age
+- Income Limits: None
+
+**Key Features:**
+- Minimum Opening Deposit: $25
+- Maximum Contribution: Up to $500,000 lifetime per beneficiary
+- Investment Options: Age-based portfolios, individual fund portfolios
+- Tax Benefits: 
+  - Earnings grow tax-free
+  - Withdrawals tax-free for qualified education expenses
+  - State tax deduction (varies by state)
+- Annual Maintenance Fee: $25 (waived with automatic contributions or $25,000+ balance)
+- Qualified Expenses: Tuition, fees, books, room & board, K-12 tuition (up to $10,000/year)
+- Beneficiary Changes: Allowed to family members
+- Investment Management: Professional portfolio management
+
+**Target Audience:** Parents, grandparents, anyone saving for education
+
+---
+
+## ADDITIONAL SERVICES
+
+### Overdraft Protection
+- Available on Premier Checking accounts
+- Links to savings account or line of credit
+- Transfer fee: $10 per transfer
+- More affordable than overdraft fees ($35)
+
+### Wire Transfers
+- Domestic: $25 outgoing, $15 incoming
+- International: $45 outgoing, $20 incoming
+- Same-day processing available
+
+### Safe Deposit Boxes
+- Small (3x5): $40/year
+- Medium (5x10): $75/year
+- Large (10x10): $150/year
+- Requires account with bank
+
+### Notary Services
+- Free for account holders
+- $10 per signature for non-customers
+
+### Cashier's Checks
+- Free for Premier accounts
+- $8 for other accounts
+
+---
+
+## CUSTOMER SUPPORT
+
+**Branch Hours:**
+- Monday - Friday: 9:00 AM - 5:00 PM
+- Saturday: 9:00 AM - 1:00 PM
+- Sunday: Closed
+
+**Phone Support:**
+- Personal Banking: 1-800-555-0123 (24/7)
+- Business Banking: 1-800-555-0124 (Mon-Fri 8AM-8PM)
+- Credit Cards: 1-800-555-0125 (24/7)
+- Loans: 1-800-555-0126 (Mon-Fri 8AM-6PM)
+
+**Online Support:**
+- Website: www.bankexample.com
+- Email: support@bankexample.com
+- Live Chat: Available 24/7 through website or mobile app
+
+---
+
+## IMPORTANT DISCLOSURES
+
+- All rates and fees subject to change without notice
+- Early account closure fee: $25 if closed within 90 days of opening
+- Returned check/ACH fee: $35
+- Stop payment fee: $30
+- Account research fee: $25/hour
+- Paper statement fee: $5/month (waived with e-statements)
+- Minimum balance fees apply if balance falls below stated minimums
+- All deposit accounts FDIC insured up to $250,000 per depositor
+- Loan approval subject to credit review and underwriting
+- APR = Annual Percentage Rate
+- APY = Annual Percentage Yield
+
+---
+
+**Document Version:** 3.2  
+**Effective Date:** November 1, 2025  
+**Next Review Date:** February 1, 2026  
+**Contact:** Product Management Department - products@bankexample.com

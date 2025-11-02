@@ -430,7 +430,7 @@ async def main():
             'logging': LoggingService(settings)
         }
         
-        engine = Text2SQLEngine(services)
+        engine = Text2SQLEngine(services, settings)
         evaluator = Text2SQLEvaluator(engine)
         
     except ImportError as e:

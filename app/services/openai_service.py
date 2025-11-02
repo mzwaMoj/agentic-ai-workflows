@@ -1,97 +1,80 @@
 """
-Azure OpenAI service for managing OpenAI API interactions.
+OpenAI service for managing OpenAI API interactions.
+Updated to use standard OpenAI API instead of Azure OpenAI.
 """
 
 import os
 import logging
-import ssl
-import urllib3
 import warnings
-import httpx
 from typing import Optional, List, Dict, Any
-from openai import AzureOpenAI
-from llama_index.llms.azure_openai import AzureOpenAI as LlamaAzureOpenAI
-from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
+from openai import OpenAI
+from llama_index.llms.openai import OpenAI as LlamaIndexOpenAI
+from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import Settings as LlamaSettings
 from app.config.settings import Settings
 
-# Disable SSL warnings for development (following chatbot.py)
 warnings.filterwarnings("ignore")
-ssl._create_default_https_context = ssl._create_unverified_context
-# For requests and urllib3, suppress warnings
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-# Create httpx client with SSL verification disabled
-http_client = httpx.Client(verify=False)
-
 
 logger = logging.getLogger(__name__)
 
 
 class OpenAIService:
-    """Service for managing Azure OpenAI interactions."""
+    """Service for managing OpenAI interactions."""
     
     def __init__(self, settings: Settings):
         self.settings = settings
-        self._client: Optional[AzureOpenAI] = None
-        self._llm: Optional[LlamaAzureOpenAI] = None
-        self._embedding_model: Optional[AzureOpenAIEmbedding] = None
+        self._client: Optional[OpenAI] = None
+        self._llm: Optional[LlamaIndexOpenAI] = None
+        self._embedding_model: Optional[OpenAIEmbedding] = None
         self._initialize_clients()
         
     def _initialize_clients(self):
-        """Initialize Azure OpenAI clients and configure LlamaIndex settings."""
+        """Initialize OpenAI clients and configure LlamaIndex settings."""
         try:
             # Initialize standard OpenAI client
-            self._client = AzureOpenAI(
-                api_key=self.settings.azure_openai_key,
-                api_version=self.settings.azure_openai_version,
-                azure_endpoint=self.settings.azure_openai_endpoint,
-                http_client=http_client
+            self._client = OpenAI(
+                api_key=self.settings.openai_api_key
             )
             
-            # Initialize LlamaIndex LLM (following chatbot.py)
-            self._llm = LlamaAzureOpenAI(
-                default_headers={"Ocp-Apim-Subscription-Key": self.settings.azure_openai_key},
-                api_key=self.settings.azure_openai_key,
-                azure_endpoint=self.settings.azure_openai_endpoint,
-                azure_deployment=self.settings.azure_openai_deployment_name,
-                api_version=self.settings.azure_openai_version,
-                model=self.settings.azure_openai_deployment_name,
-                http_client=http_client
+            # Initialize LlamaIndex LLM with standard OpenAI
+            self._llm = LlamaIndexOpenAI(
+                api_key=self.settings.openai_api_key,
+                model=self.settings.openai_model,
             )
             
-            # Initialize embedding model (following chatbot.py)
-            self._embedding_model = AzureOpenAIEmbedding(
-                deployment_name=self.settings.azure_openai_embedding_deployment_name,
-                api_key=self.settings.azure_openai_embedding_key,
-                azure_endpoint=self.settings.azure_openai_embedding_endpoint,
-                api_version=self.settings.azure_openai_embedding_api_version,
-                http_client=http_client
+            # Initialize embedding model with standard OpenAI
+            # Explicitly set api_base to ensure correct endpoint
+            self._embedding_model = OpenAIEmbedding(
+                model=self.settings.openai_embedding_model,
+                api_key=self.settings.openai_api_key,
+                api_base="https://api.openai.com/v1",
             )
             
-            # Configure LlamaIndex global settings (following chatbot.py)
+            # Configure LlamaIndex global settings
             LlamaSettings.llm = self._llm
             LlamaSettings.embed_model = self._embedding_model
             
-            logger.info("Azure OpenAI clients and LlamaIndex settings initialized successfully")
+            logger.info("OpenAI clients and LlamaIndex settings initialized successfully")
         except Exception as e:
-            logger.error(f"Failed to initialize Azure OpenAI clients: {e}")
+            logger.error(f"Failed to initialize OpenAI clients: {e}")
             raise
+    
     @property
-    def client(self) -> AzureOpenAI:
+    def client(self) -> OpenAI:
         """Get the OpenAI client instance."""
         if self._client is None:
             self._initialize_clients()
         return self._client
     
     @property
-    def llm(self) -> LlamaAzureOpenAI:
+    def llm(self) -> LlamaIndexOpenAI:
         """Get the LlamaIndex LLM instance."""
         if self._llm is None:
             self._initialize_clients()
         return self._llm
     
     @property
-    def embedding_model(self) -> AzureOpenAIEmbedding:
+    def embedding_model(self) -> OpenAIEmbedding:
         """Get the embedding model instance."""
         if self._embedding_model is None:
             self._initialize_clients()
@@ -100,39 +83,37 @@ class OpenAIService:
     async def chat_completion(
         self,
         messages: List[Dict[str, str]],
-        tools: Optional[List[Dict]] = None,
-        temperature: float = 0.4,
-        max_tokens: Optional[int] = None
-    ) -> Any:
+        temperature: float = 0.7,
+        max_tokens: Optional[int] = None,
+        tools: Optional[List[Dict[str, Any]]] = None
+    ):
         """
-        Create a chat completion with Azure OpenAI.
+        Generate chat completion using new OpenAI API format.
         
         Args:
-            messages: List of message dictionaries
-            tools: Optional list of tools/functions
+            messages: List of message dictionaries with 'role' and 'content'
             temperature: Sampling temperature
-            max_tokens: Maximum tokens to generate
+            max_tokens: Maximum tokens in response
+            tools: Optional list of tool definitions
             
         Returns:
-            OpenAI chat completion response
+            OpenAI response object with output_text and output properties
         """
         try:
             params = {
-                "model": self.settings.azure_openai_deployment_name,
-                "messages": messages,
-                "temperature": temperature
+                "model": self.settings.openai_model,
+                "input": messages,
             }
             
             if tools:
                 params["tools"] = tools
-                params["tool_choice"] = "auto"
                 
-            if max_tokens:
-                params["max_tokens"] = max_tokens
+            # Note: temperature and max_tokens may need to be passed differently
+            # in the new API - check OpenAI documentation for exact parameters
                 
-            response = self.client.chat.completions.create(**params)
+            response = self.client.responses.create(**params)
             
-            logger.debug(f"Chat completion successful. Model: {self.settings.azure_openai_deployment_name}")
+            logger.debug(f"Chat completion successful. Model: {self.settings.openai_model}")
             return response
             
         except Exception as e:
@@ -144,9 +125,9 @@ class OpenAIService:
         try:
             # Test with a simple completion
             test_messages = [{"role": "user", "content": "Hello"}]
-            response = await self.chat_completion(test_messages, max_tokens=10)
+            response = await self.chat_completion(test_messages)
             
-            if response and response.choices:
+            if response and hasattr(response, 'output_text'):
                 logger.info("OpenAI service connection validated successfully")
                 return True
             else:
@@ -164,15 +145,13 @@ class OpenAIService:
             return {
                 "service": "openai",
                 "status": "healthy" if is_healthy else "unhealthy",
-                "endpoint": self.settings.azure_openai_endpoint,
-                "deployment": self.settings.azure_openai_deployment_name,
-                "version": self.settings.azure_openai_version
+                "model": self.settings.openai_model,
+                "api_configured": bool(self.settings.openai_api_key)
             }
         except Exception as e:
             return {
                 "service": "openai",
                 "status": "unhealthy",
                 "error": str(e),
-                "endpoint": self.settings.azure_openai_endpoint,
-                "deployment": self.settings.azure_openai_deployment_name
+                "model": self.settings.openai_model
             }

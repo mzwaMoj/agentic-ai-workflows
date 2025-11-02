@@ -46,6 +46,7 @@ from .mlflow_logger import (
     log_required_tables,
     log_polish_prompt,
     log_final_response,
+    log_products,
     end_chat_run
 )
 
@@ -92,5 +93,6 @@ __all__ = [
     "log_required_tables", 
     "log_polish_prompt",
     "log_final_response",
+    "log_products",
     "end_chat_run"
 ]

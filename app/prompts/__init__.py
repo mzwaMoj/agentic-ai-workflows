@@ -7,11 +7,13 @@ from .prompt_agent_sql_analysis import prompt_agent_sql_analysis
 from .prompt_agent_final_response import prompt_agent_final_response
 from .prompt_agent_plot import prompt_agent_plot
 from .prompt_agent_table_router import prompt_agent_table_router
+from .prompt_agent_products import prompt_agent_products
 
 __all__ = [
     'prompt_agent_router',
     'prompt_agent_sql_analysis', 
     'prompt_agent_final_response',
     'prompt_agent_plot',
-    'prompt_agent_table_router'
+    'prompt_agent_table_router',
+    "prompt_agent_products"
 ]

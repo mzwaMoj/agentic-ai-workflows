@@ -10,9 +10,8 @@ import chromadb
 from llama_index.core import VectorStoreIndex, Settings as LlamaSettings, SimpleDirectoryReader
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
-from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
-from llama_index.llms.azure_openai import AzureOpenAI
-import httpx
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.llms.openai import OpenAI as LlamaIndexOpenAI
 from app.config.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -33,41 +32,31 @@ class VectorService:
         self._initialize_db()
 
     def _initialize_llm_and_embeddings(self):
-        """Initialize LLM and embedding models following index_local.py working pattern."""
+        """Initialize LLM and embedding models using standard OpenAI."""
         try:
-            # Disable SSL verification for development (following index_local.py)
-            http_client = httpx.Client(verify=False)
-            
-            # Set up LLM (following index_local.py)
-            llm = AzureOpenAI(
-                default_headers={"Ocp-Apim-Subscription-Key": self.settings.azure_openai_key},
-                api_key=self.settings.azure_openai_key,
-                azure_endpoint=self.settings.azure_openai_endpoint,
-                azure_deployment=self.settings.azure_openai_deployment_name,
-                api_version=self.settings.azure_openai_version,
-                model=self.settings.azure_openai_deployment_name,
-                http_client=http_client
+            # Set up LLM with standard OpenAI
+            llm = LlamaIndexOpenAI(
+                api_key=self.settings.openai_api_key,
+                model=self.settings.openai_model,
             )
             
-            # Set up embedding model (following index_local.py)
-            embedding_model = AzureOpenAIEmbedding(
-                deployment_name=self.settings.azure_openai_embedding_deployment_name,
-                api_key=self.settings.azure_openai_embedding_key,
-                azure_endpoint=self.settings.azure_openai_embedding_endpoint,
-                api_version=self.settings.azure_openai_embedding_api_version,
-                http_client=http_client
+            # Set up embedding model with standard OpenAI
+            embedding_model = OpenAIEmbedding(
+                model=self.settings.openai_embedding_model,
+                api_key=self.settings.openai_api_key,
+                api_base="https://api.openai.com/v1",
             )
             
-            # Set global LlamaIndex settings (following index_local.py)
+            # Set global LlamaIndex settings
             LlamaSettings.llm = llm
             LlamaSettings.embed_model = embedding_model
             
-            # CRITICAL: Initialize Settings properly via document indexing (following index_local.py pattern)
+            # CRITICAL: Initialize Settings properly via document indexing
             self._initialize_settings_via_document_indexing()
             
             self._llm_configured = True
             self._embedding_configured = True
-            logger.info("LLM and embedding models configured successfully following index_local.py pattern")
+            logger.info("LLM and embedding models configured successfully with OpenAI")
             
         except Exception as e:
             logger.error(f"Failed to initialize LLM and embeddings: {e}")
@@ -77,7 +66,7 @@ class VectorService:
     def _initialize_settings_via_document_indexing(self):
         """
         Initialize LlamaIndex Settings properly by creating a temporary index from documents.
-        This follows the exact pattern from working index_local.py
+        This follows a pattern similar to index_local.py but uses OpenAI instead of Azure.
         """
         try:
             # Define file paths for metadata (following index_local.py)

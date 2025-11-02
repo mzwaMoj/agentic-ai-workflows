@@ -10,7 +10,7 @@ def start_chat_run(user_input):
         # Set tracking URI here instead of at module level
         try:
             # Set active model:
-            mlflow.set_active_model(name="AzureOpenAI")
+            mlflow.set_active_model(name="OpenAI")
             mlflow.set_tracking_uri(os.environ.get("MLFLOW_TRACKING_URI"))
 
         except:
@@ -62,6 +62,12 @@ def log_sql_results(results):
 def log_generated_chart_results(results):
     try:
         mlflow.log_text(json.dumps(results, indent=2), "generated_chart_results.txt")
+    except:
+        pass
+
+def log_products(results):
+    try:
+        mlflow.log_text(json.dumps(results, indent=2), "products.txt")
     except:
         pass
 

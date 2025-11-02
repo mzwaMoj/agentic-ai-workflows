@@ -1,18 +1,82 @@
 # Text2SQL Evaluation Suite
 
-This folder contains comprehensive evaluation scripts for the Text2SQL application. The evaluation system assesses various aspects of the Text2SQL system including SQL generation quality, routing accuracy, chart generation, and multi-intent query handling.
+Comprehensive evaluation and guardrails system for the AI-Powered Text2SQL engine.
 
 ## 📁 Files Overview
 
-### 🔧 Core Evaluation Scripts
+### 🆕 New Evaluation System (Recommended)
 
-- **`text2sql_evaluator.py`** - Main evaluation engine with comprehensive metrics
+- **`test_cases.py`** - Library of 35+ comprehensive test cases for all scenarios
+- **`guardrails.py`** - SQL security, safety, and performance validation
+- **`eval_runner.py`** - Orchestrates evaluation execution and calculates metrics
+- **`response_quality_eval.py`** - LLM-as-judge evaluation of response quality
+
+### 🔧 Legacy Evaluation Scripts
+
+- **`text2sql_evaluator.py`** - Original evaluation engine with comprehensive metrics
 - **`mlflow_metrics.py`** - Custom MLflow metrics for Text2SQL evaluation
 - **`advanced_evaluator.py`** - Advanced evaluation with MLflow integration and reporting
 - **`quick_eval.py`** - Quick evaluation with mock engine for testing
 - **`run_eval.py`** - Simple script to test evaluation metrics
 
 ## 🚀 Quick Start
+
+### NEW: Running Full Evaluation with Guardrails
+
+```python
+import asyncio
+from app.evals.test_cases import get_all_test_cases
+from app.evals.guardrails import SQLGuardrails
+from app.evals.eval_runner import Text2SQLEvaluationRunner
+from app.evals.response_quality_eval import ResponseQualityEvaluator
+from app.core.text2sql_engine import Text2SQLEngine
+
+async def run_full_evaluation():
+    # 1. Initialize components
+    engine = Text2SQLEngine(services, settings)
+    
+    guardrails = SQLGuardrails(
+        known_tables=["customer_information", "transaction_history", 
+                      "crs_messagespec", "crs_countrycode"]
+    )
+    
+    eval_runner = Text2SQLEvaluationRunner(
+        engine=engine,
+        guardrails=guardrails,
+        use_mlflow=True
+    )
+    
+    quality_evaluator = ResponseQualityEvaluator()
+    
+    # 2. Get test cases
+    test_cases = get_all_test_cases()
+    
+    # 3. Run SQL/execution evaluation
+    results, metrics = await eval_runner.run_evaluation(test_cases)
+    
+    # 4. Add response quality evaluation
+    evaluated_results = quality_evaluator.evaluate_batch(results)
+    
+    # 5. Calculate quality metrics
+    quality_metrics = quality_evaluator.calculate_average_quality_score(evaluated_results)
+    
+    # 6. Print results
+    eval_runner.print_summary(metrics)
+    print("\n📊 Response Quality Metrics:")
+    for metric, score in quality_metrics.items():
+        print(f"  {metric}: {score:.2f}/10")
+    
+    # 7. Export
+    eval_runner.export_results(evaluated_results, "complete_eval_results.json")
+    
+    return evaluated_results, metrics, quality_metrics
+
+# Run
+results, metrics, quality = asyncio.run(run_full_evaluation())
+```
+
+### LEGACY: Original Evaluation Methods
+
 
 ### Option 1: Simple Test (No dependencies)
 ```bash

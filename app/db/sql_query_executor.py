@@ -121,10 +121,26 @@ def execute_multiple_sql_code(sql_code, connection=None):
         # If no code blocks found, try to clean the entire sql_code and treat it as a single query
         # This handles cases where LLM generates SQL with markdown headers but no code blocks
         cleaned_code = clean_sql_query(sql_code)
+        
+        # Check if the cleaned code looks like SQL (starts with SELECT, WITH, etc.)
         if cleaned_code and cleaned_code.strip():
-            queries = [cleaned_code]
-        else:
-            return [{"query": sql_code, 
+            # Check for SQL keywords to confirm it's actually SQL
+            sql_indicators = r'^\s*(SELECT|WITH|DECLARE)\b'
+            if re.match(sql_indicators, cleaned_code, re.IGNORECASE | re.MULTILINE):
+                queries = [cleaned_code]
+            else:
+                # Try extracting anything that looks like SQL from the text
+                # Look for patterns like "SELECT ... FROM ..." even without code blocks
+                potential_queries = re.findall(
+                    r'((?:WITH|SELECT)\b.*?(?:;|$))',
+                    sql_code,
+                    re.DOTALL | re.IGNORECASE
+                )
+                if potential_queries:
+                    queries = [clean_sql_query(q) for q in potential_queries if clean_sql_query(q).strip()]
+        
+        if not queries:
+            return [{"query": sql_code[:200] + "..." if len(sql_code) > 200 else sql_code, 
                     "result": "No SQL queries found in the provided code. Please format queries in ```sql code blocks.",
                     "status": "format_error"}]
     results = []

@@ -21,6 +21,7 @@ from app.models import (
 )
 from app.core import Text2SQLEngine
 from app.services import get_services
+from app.config.settings import settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -28,7 +29,7 @@ router = APIRouter()
 
 async def get_text2sql_engine(services: Dict[str, Any] = Depends(get_services)) -> Text2SQLEngine:
     """Dependency to get Text2SQL engine instance."""
-    return Text2SQLEngine(services)
+    return Text2SQLEngine(services, settings)
 
 
 @router.post("/generate", response_model=Text2SQLResponse)

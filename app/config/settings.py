@@ -6,8 +6,6 @@ Centralized configuration management with environment variable support.
 import os
 from typing import Optional, List
 from pathlib import Path
-import urllib3
-import httpx
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
@@ -20,24 +18,20 @@ class Settings:
         self.app_name: str = os.environ.get("APP_NAME")
         self.app_version: str = os.environ.get("APP_VERSION")
         self.debug: bool = os.environ.get("DEBUG", "false").lower() == "true"
-        # Azure OpenAI Configuration
-        self.azure_openai_endpoint: str = os.environ.get("AZURE_OPENAI_ENDPOINT")
-        self.azure_openai_key: str = os.environ.get("AZURE_OPENAI_KEY")
-        self.azure_openai_deployment_name: str = os.environ.get("AZURE_OPENAI_DEPLOYMENT_NAME")
-        self.azure_openai_version: str = os.environ.get("AZURE_OPENAI_VERSION")
-        self.http_client: str = httpx.Client(verify=False) # Only for development
         
-        # Azure OpenAI Embedding Configuration (following chatbot.py)
-        self.azure_openai_embedding_endpoint: str = os.environ.get("AZURE_OPENAI_EMBEDDING_ENDPOINT")
-        self.azure_openai_embedding_key: str = os.environ.get("AZURE_OPENAI_EMBEDDING_KEY")
-        self.azure_openai_embedding_deployment_name: str = os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME")
-        self.azure_openai_embedding_api_version: str = os.environ.get("AZURE_OPENAI_EMBEDDING_API_VERSION")
+        # OpenAI Configuration (replaces Azure OpenAI)
+        self.openai_api_key: str = os.environ.get("OPENAI_API_KEY")
+        self.openai_model: str = os.environ.get("OPENAI_MODEL", "gpt-4o")
+        
+        # OpenAI Embedding Configuration (using standard OpenAI embeddings)
+        self.openai_embedding_model: str = os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
         
         # Database Configuration
-        self.db_server: str = os.environ.get("DB_SERVER", "localhost\SQLEXPRESS")
+        # Default to SQL authentication for macOS (Windows uses 'windows' auth)
+        self.db_server: str = os.environ.get("DB_SERVER", "localhost,1433")
         self.db_database: str = os.environ.get("DB_DATABASE", "master")
-        self.db_auth_type: str = os.environ.get("DB_AUTH_TYPE", "windows")
-        self.db_username: Optional[str] = os.environ.get("DB_USERNAME")
+        self.db_auth_type: str = os.environ.get("DB_AUTH_TYPE", "sql")  # Default to 'sql' for macOS
+        self.db_username: Optional[str] = os.environ.get("DB_USERNAME", "SA")
         self.db_password: Optional[str] = os.environ.get("DB_PASSWORD")        # ChromaDB Configuration
         self.chroma_persist_directory: str = os.environ.get("CHROMA_PERSIST_DIRECTORY", "./index/chroma_db")
         self.chroma_collection_name: str = os.environ.get("CHROMA_COLLECTION_NAME", "sql_tables_metadata")
@@ -76,7 +70,7 @@ class Settings:
         
         # Security
         self.api_key: Optional[str] = os.environ.get("API_KEY")
-        self.secret_key: str = os.environ.get("SECRET_KEY", "your-secret-key-here")
+        self.secret_key: str = os.environ.get("SECRET_KEY")
         
         # Load from .env file if it exists
         self._load_env_file()
@@ -97,10 +91,11 @@ class Settings:
     @property
     def database_url(self) -> str:
         """Get database connection URL."""
-        if self.db_auth_type.lower() == "windows":
+        if self.db_auth_type and self.db_auth_type.lower() == "windows":
             return f"mssql+pyodbc://{self.db_server}/{self.db_database}?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes"
         else:
-            return f"mssql+pyodbc://{self.db_username}:{self.db_password}@{self.db_server}/{self.db_database}?driver=ODBC+Driver+17+for+SQL+Server"
+            # SQL authentication (default for macOS/Docker)
+            return f"mssql+pyodbc://{self.db_username}:{self.db_password}@{self.db_server}/{self.db_database}?driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes&Encrypt=no"
         
     @property
     def vector_db_absolute_path(self) -> str:
@@ -116,9 +111,8 @@ class Settings:
     def validate_required_settings(self) -> bool:
         """Validate that required settings are provided."""
         required_fields = [
-            "azure_openai_endpoint",
-            "azure_openai_key", 
-            "azure_openai_deployment_name"
+            "openai_api_key",
+            "openai_model"
         ]
         
         missing_fields = []

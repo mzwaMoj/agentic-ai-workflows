@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <h1>Standard Bank Compliance Assistant</h1>
+          <h1>R Compliance Assistant</h1>
           <p>Ask questions about regulations, compliance, and amendments</p>
         </div>
       </header>
@@ -17,7 +17,7 @@ function App() {
       </main>
       
       <footer className="app-footer">
-        <p>&copy; 2025 Standard Bank. Compliance Assistant powered by AI.</p>
+        <p>&copy; 2025 R. Compliance Assistant powered by AI.</p>
       </footer>
     </div>
   );
