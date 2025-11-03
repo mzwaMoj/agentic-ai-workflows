@@ -60,7 +60,7 @@ response = client.responses.create(
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/mzwaMoj/agentic-ai-workflows.git
 cd Lessons_OpenAI
 
 # Create virtual environment
