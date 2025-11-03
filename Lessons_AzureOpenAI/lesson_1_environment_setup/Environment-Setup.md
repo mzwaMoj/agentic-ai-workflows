@@ -39,7 +39,7 @@ Virtual environments allow you to manage project-specific dependencies without a
 2. Navigate to the project directory:
 
 ```bash
-cd path/to/ai-agents-lessons
+cd path/to/agentic-ai-workflows
 ```
 
 3. Create a virtual environment:

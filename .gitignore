@@ -33,7 +33,6 @@ MANIFEST
 !README.md
 !Readme.md
 !EXAMPLE_QUESTIONS.md
-!*.py
 !requirements.txt
 !.env.template
 
