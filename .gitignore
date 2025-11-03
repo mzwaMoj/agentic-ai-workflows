@@ -24,12 +24,23 @@ share/python-wheels/
 MANIFEST
 
 
-# Markdown files except readme
-*.md.bak
-*.md~
+# But track these specific folders
+!Lessons_AzureOpenAI/
+!Lessons_OpenAI/
+
+# Track essential files
+!.gitignore
 !README.md
 !Readme.md
 !EXAMPLE_QUESTIONS.md
+!*.py
+!requirements.txt
+!.env.template
+
+
+# Markdown files except readme
+*.md.bak
+*.md~
 
 # Virtual Environments
 env/
