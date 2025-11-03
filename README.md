@@ -19,9 +19,8 @@ Welcome! This repository is your **friendly, beginner-focused guide** to buildin
 
 Here's what a multi-agent system looks like:
 
-https://github.com/user-attachments/assets/your-video-id-here
+https://github.com/user-attachments/assets/414963b2-32a6-4419-b1db-045773fc1eed
 
-> **Note**: Upload `presentation/ArchitectureView.mov` to your GitHub repository's Issues or PR, then replace the URL above with the generated link.
 
 ## 📚 What's Inside
 
