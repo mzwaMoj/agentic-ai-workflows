@@ -16,7 +16,7 @@ pandas
 openpyxl
 xlrd
 
-# Additional packages for modular Text2SQL API
+# Additional packages
 pydantic
 pydantic-settings
 chromadb

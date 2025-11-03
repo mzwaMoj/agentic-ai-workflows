@@ -1,588 +1,251 @@
-# Text2SQL API Application
+# Building Agentic AI Applications - Beginner's Guide
 
-A powerful FastAPI-based application that converts natural language queries into SQL and executes them with optional chart generation. This application provides a seamless interface for business users to interact with databases using plain English.
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-green.svg)](https://platform.openai.com/)
+[![Azure](https://img.shields.io/badge/Azure-OpenAI-blue.svg)](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
 
-## 🏗️ Architecture Overview
+## 🎯 Overview
 
-This application follows a modular, service-oriented architecture designed for scalability, maintainability, and easy integration with frontend applications (React, Angular, etc.).
+Welcome! This repository is your **friendly, beginner-focused guide** to building AI agents from scratch. Whether you're using OpenAI's API or Azure OpenAI, you'll learn to create intelligent applications that can search the web, query databases, process documents, and much more.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                          Frontend                               │
-│                    (React, Web UI, etc.)                       │
-└─────────────────────┬───────────────────────────────────────────┘
-                      │ HTTP/REST API
-┌─────────────────────▼───────────────────────────────────────────┐
-│                      FastAPI Application                       │
-│                        (main.py)                               │
-├─────────────────────────────────────────────────────────────────┤
-│                     API Layer (v1)                             │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐              │
-│  │   Health    │ │  Text2SQL   │ │    Chat     │              │
-│  │ Endpoints   │ │ Endpoints   │ │ Endpoints   │              │
-│  └─────────────┘ └─────────────┘ └─────────────┘              │
-├─────────────────────────────────────────────────────────────────┤
-│                   Core Business Logic                          │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │              Text2SQL Engine                               ││
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          ││
-│  │  │   Router    │ │     SQL     │ │    Chart    │          ││
-│  │  │   Agent     │ │   Agent     │ │   Agent     │          ││
-│  │  └─────────────┘ └─────────────┘ └─────────────┘          ││
-│  └─────────────────────────────────────────────────────────────┘│
-├─────────────────────────────────────────────────────────────────┤
-│                     Service Layer                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐              │
-│  │   OpenAI    │ │  Database   │ │   Vector    │              │
-│  │  Service    │ │  Service    │ │  Service    │              │
-│  └─────────────┘ └─────────────┘ └─────────────┘              │
-├─────────────────────────────────────────────────────────────────┤
-│                   External Services                            │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐              │
-│  │   Azure     │ │  SQL Server │ │  ChromaDB   │              │
-│  │  OpenAI     │ │  Database   │ │ (Metadata)  │              │
-│  └─────────────┘ └─────────────┘ └─────────────┘              │
-└─────────────────────────────────────────────────────────────────┘
-```
+### What You'll Learn
 
-## 🚀 How It Works - Step by Step Process
+- 🤖 **Build AI Agents** - Create chatbots, search agents, and database assistants
+- 🔧 **Use Modern APIs** - Work with OpenAI's latest response format and tool calling
+- 🚀 **Go From Zero to Production** - Start with basics, end with deployable applications
+- 🎓 **Hands-On Learning** - Every lesson includes working code and Jupyter notebooks
 
-### Step 1: User Query Input
-- User submits a natural language query via REST API
-- Examples: "Show me all customers", "What are the top 5 products by sales?"
-- Query is validated and sanitized
+### Architecture Overview
 
-### Step 2: Query Routing & Analysis
-```
-User Query → Router Agent → Intent Analysis
-                ↓
-    ┌─────────────────────────────┐
-    │  Query Classification:      │
-    │  • SQL Required?            │
-    │  • Table Requirements?      │
-    │  • Chart Generation?        │
-    │  • General Conversation?    │
-    └─────────────────────────────┘
-```
+Here's what a multi-agent system looks like:
 
-### Step 3: Table Metadata Retrieval
-- Vector database (ChromaDB) contains pre-indexed table metadata
-- Semantic search finds relevant tables and columns
-- Provides context about available data structures
+https://github.com/user-attachments/assets/your-video-id-here
 
-### Step 4: SQL Generation
-```
-Natural Language + Table Metadata → Azure OpenAI → SQL Query
-    ↓
-"Show customers in New York" + Customer_Table_Schema → 
-"SELECT * FROM customers WHERE city = 'New York'"
-```
+> **Note**: Upload `presentation/ArchitectureView.mov` to your GitHub repository's Issues or PR, then replace the URL above with the generated link.
 
-### Step 5: SQL Validation & Execution
-- Safety checks prevent destructive operations (DELETE, DROP, etc.)
-- Query execution with result limits
-- Error handling for invalid queries
+## 📚 What's Inside
 
-### Step 6: Chart Generation (Optional)
-- Analyzes SQL results for chart potential
-- Generates interactive charts using Plotly
-- Returns HTML/JavaScript for frontend embedding
+This repository contains **two parallel lesson tracks** - pick the one that matches your API provider:
 
-### Step 7: Response Generation
-- Combines SQL results, charts, and natural language explanation
-- Formatted response with execution metadata
-- Chat history maintenance for conversational flow
+### 📂 Lessons_OpenAI
+Complete tutorials using **OpenAI's API** (GPT-4+)
+- Uses the new `client.responses.create()` format
+- Modern tool calling patterns
+- Direct OpenAI API integration
 
-## 📋 API Endpoints
+### 📂 Lessons_AzureOpenAI  
+Identical lessons using **Azure OpenAI Service**
+- Enterprise-grade deployment
+- Same capabilities, Azure integration
+- Follows Azure authentication patterns
 
-### Health Endpoints
-```
-GET /api/v1/health              # Basic health check
-GET /api/v1/health/detailed     # Detailed service status
-```
+**Both tracks cover the same material** - choose based on your API access!
 
-### Text2SQL Endpoints
-```
-POST /api/v1/text2sql/generate  # Generate SQL from natural language
-POST /api/v1/text2sql/execute   # Execute SQL directly
-POST /api/v1/text2sql/validate  # Validate SQL query
-GET  /api/v1/text2sql/tables    # Get table information
-```
 
-### Chat Endpoints
-```
-POST /api/v1/chat/completions   # Conversational interface
-POST /api/v1/chat/history       # Chat session management
-```
+## �️ Learning Path
 
-## 🛠️ Installation & Setup
+Each lesson builds on the previous one, taking you from beginner to building production-ready AI agents.
 
-### Prerequisites
-- Python 3.11+
-- Azure OpenAI access
-- SQL Server access
-- Virtual environment (recommended)
+| Lesson | What You'll Build | Key Concepts |
+|--------|-------------------|--------------|
+| **1. Environment Setup** | Development environment | Python, virtual environments, API keys |
+| **2. Chatbot Basics** | Your first AI chatbot | Response API, prompting, conversations |
+| **3. Web Search Agent** | Agent that searches the web | Tool calling, function definitions, API integration |
+| **4. Text-to-SQL Agent** | Natural language database queries | SQLite, schema understanding, query generation |
+| **5. Document Q&A Agent** | Ask questions about documents | RAG, vector search, embeddings |
+| **6. Multi-Agent System** | Multiple specialized agents | Agent orchestration, routing, coordination |
+| **7. Evaluation & Testing** | Measure agent performance | Metrics, testing, quality assurance |
+| **8. API Deployment** | Deploy as REST API | FastAPI, endpoints, service architecture |
+| **9. Production Ready** | Deploy to production | Docker, monitoring, scaling |
 
-### Step 1: Clone and Setup Environment
-```powershell
-# Clone the repository
+### 🎓 Prerequisites
+
+**What you need to know:**
+- Basic Python (variables, functions, loops)
+- How to use a terminal/command prompt
+- Basic understanding of APIs (helpful but not required)
+
+**What you need to have:**
+- Python 3.9 or higher installed
+- An OpenAI API key OR Azure OpenAI access
+- A code editor (VS Code recommended)
+- About 2GB free disk space
+
+
+## 🚀 Quick Start
+
+### Step 1: Clone the Repository
+
+```bash
 git clone <repository-url>
-cd text_sql_analysis
-
-# Create and activate virtual environment
-python -m venv venv
-& ".\venv\Scripts\Activate.ps1"
-
-# Install dependencies
-pip install -r requirements.txt
+cd <repository-name>
 ```
 
-### Step 2: Environment Configuration
-Create a `.env` file in the root directory:
+### Step 2: Choose Your Track
 
-```env
-# Application Configuration
-APP_NAME=Text2SQL API
-APP_VERSION=1.0.0
-DEBUG=true
+Pick OpenAI or Azure OpenAI based on what you have access to:
 
-# Azure OpenAI Configuration
-AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com/
-AZURE_OPENAI_KEY=your_azure_openai_key_here
-AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
-AZURE_OPENAI_VERSION=2024-02-15-preview
-
-# Database Configuration
-DB_SERVER=your_sql_server_here
-DB_DATABASE=master
-DB_AUTH_TYPE=windows
-
-# Vector Database Configuration
-VECTOR_DB_PATH=./index/chroma_db
-
-# API Configuration
-CORS_ORIGINS=*
-API_PREFIX=/api/v1
-HOST=0.0.0.0
-PORT=8000
-
-# Feature Flags
-ENABLE_CHAT=true
-ENABLE_CHARTS=true
-ENABLE_MLFLOW=true
+**For OpenAI API:**
+```bash
+cd Lessons_OpenAI
 ```
 
-### Step 3: Database Setup
-```powershell
-# Run database setup scripts
-python db/db_setup.py
-
-# Generate sample data (optional)
-python db/generate_sql_data.py
+**For Azure OpenAI:**
+```bash
+cd Lessons_AzureOpenAI
 ```
 
-### Step 4: Start the Application
-```powershell
-# Development mode (with auto-reload)
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+### Step 3: Follow the Setup Guide
 
-# Production mode
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+Each folder has its own `README.md` with detailed setup instructions:
+
+1. Create a virtual environment
+2. Install dependencies
+3. Configure your API keys
+4. Start with Lesson 1
+
+### Step 4: Start Learning!
+
+Open Lesson 1 and follow along. Each lesson includes:
+- 📓 Jupyter notebooks with explanations
+- 💻 Working code examples
+- ✅ Exercises to practice
+- 🎯 A project to build
+
+## 🔑 What Makes This Different?
+
+### ✨ Beginner Friendly
+- **No prior AI experience needed** - We start from the basics
+- **Step-by-step explanations** - Every concept is explained clearly
+- **Working examples** - All code is tested and ready to run
+- **Learn by doing** - Build real projects in every lesson
+
+### 🎯 Practical Focus
+- **Real-world projects** - Build agents you can actually use
+- **Modern patterns** - Learn the latest API formats and best practices
+- **Production ready** - Go beyond tutorials to deployable applications
+- **Two API options** - Works with OpenAI or Azure OpenAI
+
+### 🚀 Progressive Learning
+- **Start simple** - Basic chatbot in Lesson 2
+- **Add complexity** - Web search, databases, documents
+- **Combine skills** - Multi-agent systems in Lesson 6
+- **Deploy it** - Production deployment guide in Lesson 9
+
+
+## 🤖 What You'll Build
+
+Throughout these lessons, you'll create increasingly sophisticated AI agents:
+
+### Lesson 2: Simple Chatbot
+```python
+from openai import OpenAI
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-4",
+    input="Hello! Tell me a joke."
+)
+print(response.output_text)
 ```
 
-The application will be available at:
-- **API Docs**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/api/v1/health
-- **Root Endpoint**: http://localhost:8000/
+### Lesson 3: Web Search Agent
+An agent that can search the internet and answer questions with current information.
 
-## 🔍 Detailed Process Flow
+### Lesson 4: Database Agent
+Convert natural language to SQL:
+- "Show me top 5 customers by spending" → SQL query → Results
 
-### 1. Request Processing Pipeline
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  HTTP Request   │───▶│   Validation    │───▶│   Middleware    │
-│   (FastAPI)     │    │   (Pydantic)    │    │   (CORS, etc.)  │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-           │                                              │
-           ▼                                              ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Text2SQL       │◀───│   Dependency    │◀───│   Router        │
-│  Engine         │    │   Injection     │    │  (Endpoint)     │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+### Lesson 5: Document Agent  
+Ask questions about your PDF documents using RAG (Retrieval Augmented Generation).
 
-### 2. Core Engine Processing
+### Lesson 6: Multi-Agent System
+Multiple specialized agents working together:
+- Router agent decides which specialist to use
+- Web agent for current events
+- SQL agent for database queries
+- Document agent for company documents
+
+### Lessons 7-9: Production Deployment
+Deploy your agents as APIs with monitoring, testing, and Docker containers.
+
+
+## �️ Repository Structure
+
 ```
-┌─────────────────┐
-│   User Query    │
-│ "Show top 5     │
-│  customers"     │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│  Router Agent   │───▶│  Intent: SQL    │
-│  Classification │    │  Tables: Yes    │
-└────────┬────────┘    │  Charts: Maybe  │
-         │             └─────────────────┘
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│ Table Retriever │───▶│ Vector Search   │
-│ (ChromaDB)      │    │ → Customer      │
-└────────┬────────┘    │   Tables Found  │
-         │             └─────────────────┘
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│   SQL Agent     │───▶│ Generated SQL:  │
-│ (Azure OpenAI)  │    │ SELECT TOP 5... │
-└────────┬────────┘    └─────────────────┘
-         │
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│ Database        │───▶│   SQL Results   │
-│ Execution       │    │   (Validated)   │
-└────────┬────────┘    └─────────────────┘
-         │
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│  Chart Agent    │───▶│  Chart HTML     │
-│ (If applicable) │    │ (Plotly/D3)     │
-└────────┬────────┘    └─────────────────┘
-         │
-         ▼
-┌─────────────────┐    ┌─────────────────┐
-│  Final Agent    │───▶│ Natural Language│
-│ (Response Gen)  │    │   Response      │
-└─────────────────┘    └─────────────────┘
+├── Lessons_OpenAI/              # Complete course using OpenAI API
+│   ├── lesson_1_environment_setup/
+│   ├── lesson_2_chatbot_basics/
+│   ├── lesson_3_rag_web_access/
+│   ├── lesson_4_text_to_sql/
+│   ├── lesson_5_document_rag/
+│   ├── lesson_6_multi_agent_systems/
+│   ├── lesson_7_evaluation_metrics/
+│   ├── lesson_8_api_deployment/
+│   ├── lesson_9_production/
+│   └── requirements.txt
+│
+├── Lessons_AzureOpenAI/         # Same course using Azure OpenAI
+│   ├── lesson_1_environment_setup/
+│   ├── lesson_2_chatbot_basics/
+│   └── ... (same structure as above)
+│
+└── README.md                    # You are here!
 ```
 
-### 3. Service Architecture
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Service Container                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │  OpenAI Service │  │Database Service │  │ Vector Service  │ │
-│  │                 │  │                 │  │                 │ │
-│  │ • Chat          │  │ • Connection    │  │ • Embedding     │ │
-│  │ • Completion    │  │ • Query Exec    │  │ • Search        │ │
-│  │ • Validation    │  │ • Result Parse  │  │ • Metadata      │ │
-│  │ • Health Check  │  │ • Health Check  │  │ • Health Check  │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-│                                                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐ │
-│  │ Logging Service │  │   Config        │  │ Error Handler   │ │
-│  │                 │  │   Service       │  │                 │ │
-│  │ • MLflow Track  │  │ • Settings      │  │ • Exception     │ │
-│  │ • Performance   │  │ • Validation    │  │ • Response      │ │
-│  │ • Error Logs    │  │ • Environment   │  │ • HTTP Codes    │ │
-│  │ • Metrics       │  │ • Features      │  │ • Debug Info    │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
+## 🎓 Learning Tips
 
-## 📊 Data Flow Diagram
+### For Complete Beginners
+1. **Start with Lesson 1** - Don't skip the setup!
+2. **Type the code yourself** - Don't just copy-paste
+3. **Experiment** - Change values and see what happens
+4. **Take breaks** - These are complex concepts
+5. **Join the community** - Ask questions, share what you build
 
-### Query Processing Flow
-```
-[User Input] → [Request Validation] → [Router Agent] → [Intent Analysis]
-                                                            │
-                                                            ▼
-[Response Generation] ← [Chart Agent] ← [SQL Execution] ← [SQL Agent]
-         │                                                   │
-         ▼                                                   ▼
-[Final Response] ← [Natural Language] ← [Table Retriever] ← [Vector Search]
-```
 
-### Database Integration Flow
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   SQL Server    │    │   ChromaDB      │    │   Azure OpenAI  │
-│                 │    │                 │    │                 │
-│ • Customer Data │◀───│ • Table Meta    │◀───│ • SQL Generation│
-│ • Transaction   │    │ • Column Info   │    │ • NL Processing │
-│ • Product Info  │    │ • Relationships │    │ • Chart Logic   │
-│ • Sales Data    │    │ • Descriptions  │    │ • Response Gen  │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         ▲                       ▲                       ▲
-         │                       │                       │
-    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-    │  Database       │    │   Vector        │    │   OpenAI        │
-    │  Service        │    │   Service       │    │   Service       │
-    └─────────────────┘    └─────────────────┘    └─────────────────┘
-```
+## 🌟 What You'll Master
 
-## 🧪 Testing the Application
+By the end of this course, you'll be able to:
 
-### 1. Health Check Test
-```powershell
-# Basic health check
-Invoke-RestMethod -Uri "http://localhost:8000/api/v1/health" -Method GET
+✅ Build conversational AI chatbots with memory  
+✅ Create agents that search the web for real-time information  
+✅ Convert natural language to database queries  
+✅ Build document Q&A systems using RAG  
+✅ Orchestrate multiple AI agents working together  
+✅ Test and evaluate agent performance  
+✅ Deploy agents as production APIs  
+✅ Use modern tool calling patterns  
+✅ Handle errors and edge cases gracefully  
+✅ Monitor and scale AI applications  
 
-# Detailed health check
-Invoke-RestMethod -Uri "http://localhost:8000/api/v1/health/detailed" -Method GET
-```
+## 📖 Additional Resources
 
-### 2. Text2SQL Test
-```powershell
-# Simple query test
-$body = @{
-    query = "Show me all customers"
-    include_charts = $false
-} | ConvertTo-Json
+**Official Documentation:**
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [Azure OpenAI Documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/)
 
-Invoke-RestMethod -Uri "http://localhost:8000/api/v1/text2sql/generate" -Method POST -Body $body -ContentType "application/json"
-```
+**Community:**
+- [OpenAI Community Forum](https://community.openai.com/)
+- Open an issue on this repository for help
 
-### 3. Chart Generation Test
-```powershell
-# Query with chart generation
-$body = @{
-    query = "Show sales by month for the last year"
-    include_charts = $true
-} | ConvertTo-Json
+**Further Learning:**
+- [OpenAI Cookbook](https://cookbook.openai.com/) - Advanced examples
+- [LangChain Documentation](https://python.langchain.com/) - Alternative framework
 
-Invoke-RestMethod -Uri "http://localhost:8000/api/v1/text2sql/generate" -Method POST -Body $body -ContentType "application/json"
-```
+## 🤝 Contributing
 
-### 4. Chat Interface Test
-```powershell
-# Conversational interaction
-$body = @{
-    message = "What are our top performing products?"
-    include_charts = $true
-} | ConvertTo-Json
+Found a bug? Have a suggestion? Contributions are welcome!
 
-Invoke-RestMethod -Uri "http://localhost:8000/api/v1/chat/completions" -Method POST -Body $body -ContentType "application/json"
-```
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-## 📝 Example Usage Scenarios
+## 📝 License
 
-### Scenario 1: Business Analytics Query
-**Input**: "What are the top 5 customers by total purchase amount?"
+This project is licensed under the MIT License - use it freely for learning or commercial projects!
 
-**Process**:
-1. Router identifies this as a SQL query requiring aggregation
-2. Table Retriever finds customer and sales tables
-3. SQL Agent generates: `SELECT TOP 5 c.customer_name, SUM(s.amount) as total FROM customers c JOIN sales s ON c.id = s.customer_id GROUP BY c.customer_name ORDER BY total DESC`
-4. Database executes query with safety checks
-5. Chart Agent creates a bar chart visualization
-6. Final response combines results with explanation
-
-**Output**:
-```json
-{
-  "success": true,
-  "response": "Here are the top 5 customers by total purchase amount...",
-  "sql_query": "SELECT TOP 5...",
-  "sql_results": [...],
-  "chart_html": "<div>...</div>",
-  "execution_time": 0.234
-}
-```
-
-### Scenario 2: Conversational Follow-up
-**Input**: "Show me their contact information too"
-
-**Process**:
-1. Router uses chat history context
-2. Understands "their" refers to previous top 5 customers
-3. Modifies previous query to include contact fields
-4. Generates response maintaining conversation flow
-
-## 🔧 Configuration Options
-
-### Feature Flags
-- `ENABLE_CHAT`: Enable conversational interface
-- `ENABLE_CHARTS`: Enable chart generation
-- `ENABLE_MLFLOW`: Enable performance tracking
-- `DEBUG`: Enable debug mode with detailed errors
-
-### Security Settings
-- `API_KEY`: Optional API key authentication
-- `CORS_ORIGINS`: Configure allowed origins
-- `MAX_QUERY_LENGTH`: Limit query size
-- `RATE_LIMITING`: Configure request limits
-
-### Performance Tuning
-- `DB_CONNECTION_POOL`: Database connection pooling
-- `OPENAI_TIMEOUT`: AI service timeouts
-- `CACHE_TTL`: Result caching duration
-- `MAX_RESULTS`: Limit result set sizes
-
-## 🚀 Deployment Options
-
-### Docker Deployment
-```dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY app/ ./app/
-EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Azure Container Apps
-- Serverless container deployment
-- Auto-scaling based on demand
-- Integration with Azure services
-
-### Traditional Server
-- Install Python 3.11+
-- Configure reverse proxy (nginx)
-- Set up SSL certificates
-- Configure monitoring
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **Azure OpenAI Connection Error**
-   - Verify endpoint URL and API key
-   - Check network connectivity
-   - Validate deployment name
-
-2. **Database Connection Failed**
-   - Confirm SQL Server accessibility
-   - Check authentication credentials
-   - Verify firewall settings
-
-3. **Vector Database Issues**
-   - Ensure ChromaDB path exists
-   - Check file permissions
-   - Verify metadata initialization
-
-4. **Query Generation Problems**
-   - Review table metadata quality
-   - Check prompt configuration
-   - Validate model deployment
-
-### Debug Mode
-Enable debug mode by setting `DEBUG=true` in environment variables for detailed error information and request logging.
-
-### Logging
-Application logs are available in:
-- Console output (development)
-- MLflow tracking (production)
-- Custom log files (configurable)
-
-## 📚 API Documentation
-
-When running in debug mode, comprehensive API documentation is available at:
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-The documentation includes:
-- Interactive API testing
-- Request/response schemas
-- Authentication requirements
-- Error code explanations
-
-## 🔒 Security Considerations
-
-### Input Validation
-- All user inputs are validated and sanitized
-- SQL injection prevention through parameterized queries
-- Maximum query length limits
-
-### SQL Safety
-- Blacklist of dangerous SQL operations (DROP, DELETE, etc.)
-- Query analysis before execution
-- Result size limitations
-
-### Authentication
-- Optional API key authentication
-- CORS configuration for frontend integration
-- Rate limiting capabilities
-
-### Error Handling
-- Secure error messages in production
-- Detailed debugging information in development
-- Logging of security events
-
-## 🤝 Frontend Integration
-
-### React Example
-```javascript
-const TextToSQLClient = {
-  generateSQL: async (query) => {
-    const response = await fetch('/api/v1/text2sql/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        query, 
-        include_charts: true 
-      })
-    });
-    return response.json();
-  },
-
-  chat: async (message, history = []) => {
-    const response = await fetch('/api/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        message, 
-        chat_history: history,
-        include_charts: true 
-      })
-    });
-    return response.json();
-  }
-};
-```
-
-### Chart Integration
-The application generates chart HTML that can be directly embedded in frontend applications. Charts are built with Plotly.js for interactive data visualization.
-
-## 📈 Performance Monitoring
-
-### MLflow Integration
-- Request/response tracking
-- Performance metrics
-- Error rate monitoring
-- Model performance analysis
-
-### Health Checks
-- Service availability monitoring
-- Database connectivity checks
-- Azure OpenAI service status
-- Vector database health
-
-### Metrics
-- Query execution times
-- API response times
-- Error rates and types
-- Resource utilization
-
-## 🛣️ Roadmap
-
-### Planned Features
-- [ ] Advanced chart types (D3.js integration)
-- [ ] Multi-database support
-- [ ] Advanced caching layer
-- [ ] Real-time query streaming
-- [ ] Advanced security features
-- [ ] Performance optimizations
-- [ ] Enhanced error recovery
-
-### Future Enhancements
-- [ ] Natural language explanations for charts
-- [ ] Query suggestion engine
-- [ ] Advanced analytics capabilities
-- [ ] Custom visualization builder
-- [ ] Multi-tenant support
 
 ---
 
-## 📞 Support
-
-For support and questions:
-1. Check the troubleshooting section
-2. Review API documentation at `/docs`
-3. Enable debug mode for detailed logging
-4. Check application logs and health endpoints
-
-This application represents a production-ready, enterprise-grade solution for natural language to SQL conversion with advanced features for business intelligence and data analysis.
+**This guide is a work in progress. Additional models including opensource models will be added** 
