@@ -42,7 +42,7 @@ You'll need an API key from one of these providers:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mzwaMoj/agentic-ai-workflows.git
    cd ai-agents-lessons
    ```
 
